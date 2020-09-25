@@ -9,6 +9,10 @@
 
     }
 
+    input{
+      max-width: 50px;
+    }
+
   </style>
 
 @endsection
@@ -18,7 +22,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
           @foreach($ins as $in)
-            <div class="btn btn-danger" onclick="serialConnect({{$in->id}}, this)" id="pat-button">{{$in->instrument->name}}</div>
+            <div class="btn btn-danger" onclick="serialConnect({{$in->id}}, this)" id="ins-button">{{$in->instrument->name}}</div>
           @endforeach
           <br /><br />
             <div class="card">
@@ -31,7 +35,7 @@
                     <br />
                     <div class="row">
                       <div class="col-3">
-                        <button class="btn btn-danger" onclick="ptModal()">Select</button>
+                        <button class="btn btn-danger" onclick="ptModal()" id="pat-button">Select</button>
                       </div>
                       <div class="col-9">
                         <p id="ptInfo">No Data Selected</p>
@@ -46,10 +50,10 @@
                     <br />
                     <div class="row">
                       <div class="col-3">
-                        <button class="btn btn-danger" id="ar-button">Select</button>
+                        <button class="btn btn-danger" id="ar-button" onclick="autorefractorModal()">Select</button>
                       </div>
                       <div class="col-9">
-                        <p>No Data Selected</p>
+                        <p id="arInfo">No Data Selected</p>
                       </div>
                     </div>
                   </div>
@@ -61,10 +65,10 @@
                     <br />
                     <div class="row">
                       <div class="col-3">
-                        <button class="btn btn-danger" id="lm-button">Select</button>
+                        <button class="btn btn-danger" id="lm-button" onclick="lensometerModal()">Select</button>
                       </div>
                       <div class="col-9">
-                        <p>No Data Selected</p>
+                        <p id="lmInfo">No Data Selected</p>
                       </div>
                     </div>
                   </div>
@@ -76,10 +80,10 @@
                     <br />
                     <div class="row">
                       <div class="col-3">
-                        <button class="btn btn-danger" id="km-button">Select</button>
+                        <button class="btn btn-danger" id="km-button" onclick="keratometerModal()">Select</button>
                       </div>
                       <div class="col-9">
-                        <p>No Data Selected</p>
+                        <p id="kmInfo">No Data Selected</p>
                       </div>
                     </div>
                   </div>

@@ -24,7 +24,7 @@ class UnassignedAutorefractorController extends Controller
     public function getAll(Request $request)
     {
         $store = StoreLocation::where('store_number', $request->location)->first();
-        $ars = UnassignedAutorefractor::where('store_location_id', $store->id)->get();
+        $ars = UnassignedAutorefractor::where('store_location_id', $store->id)->where('complete', 0)->get();
         return response()->json($ars);
     }
 
@@ -49,7 +49,7 @@ class UnassignedAutorefractorController extends Controller
             'ar15' => ['uses' => 'DataSet.KM_Data_OS.KM_mm_SteepAXIS_OS'],
             'ar01' => ['uses' => 'DataSet.RM_Data_OU.PD'],
             'la01' => ['uses' => 'DataSet.Presenting_Data_OD.Sphere_OD'],
-            'la02' => ['uses' => 'DataSet.Presenting_Data_OD.Cylinderl_OD'],
+            'la02' => ['uses' => 'DataSet.Presenting_Data_OD.Cylinder_OD'],
             'la03' => ['uses' => 'DataSet.Presenting_Data_OD.Axis_OD'],
             'la04' => ['uses' => 'DataSet.Presenting_Data_OD.Add_OD'],
             'la05' => ['uses' => 'DataSet.Presenting_Data_OS.Sphere_OS'],

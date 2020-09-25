@@ -34,7 +34,7 @@
 
 {{-- auto refractor modal --}}
 <div class="modal fade" id="autorefractorModal" tabindex="-1" role="dialog" aria-labelledby="autorefractorModal" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="autorefractorModalLabel">AutoRefractor</h5>
@@ -53,19 +53,20 @@
           </tbody>
         </table>
       </div>
-      {{-- <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div> --}}
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="enterManualAr()">Type Entry</button>
+        <button type="button" class="btn btn-primary" onclick="acceptManualAr()">Save changes</button>
+      </div>
     </div>
   </div>
 </div>
+
 {{-- end auto refractor modal --}}
 
 
 {{-- auto lensometer modal --}}
 <div class="modal fade" id="autolensometerModal" tabindex="-1" role="dialog" aria-labelledby="autolensometerModal" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="autolensometerModalLabel">Autolensometer</h5>

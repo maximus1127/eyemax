@@ -22,3 +22,4 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/get-active-encounters', 'EncounterController@getActive');
 Route::get('/get-unassigned-ar', 'UnassignedAutorefractorController@getAll');
+Route::post('/assign-ar', 'EncounterController@update');
