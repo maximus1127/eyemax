@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\UnassignedLensometer;
 use Illuminate\Http\Request;
+use App\StoreLocation;
 
 class UnassignedLensometerController extends Controller
 {
@@ -15,6 +16,12 @@ class UnassignedLensometerController extends Controller
     public function index()
     {
         //
+    }
+
+    public function getAll(Request $request){
+      $store = StoreLocation::where('store_number', $request->location)->first();
+      $lms = UnassignedLensometer::where('store_location_id', $store->id)->where('complete', 0)->get();
+      return response()->json($lms);
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Notifications\RoutesNotifications;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,4 +23,14 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/get-active-encounters', 'EncounterController@getActive');
 Route::get('/get-unassigned-ar', 'UnassignedAutorefractorController@getAll');
+Route::get('/get-unassigned-lm', 'UnassignedLensometerController@getAll');
 Route::post('/assign-ar', 'EncounterController@update');
+
+Route::get('/tech-home', 'HomeController@techHome');
+Route::get('/truvision/{encounter}', 'EncounterController@truvision')->name('truvision');
+
+
+//Truvision Routes
+
+Route::get('/chart-signal', 'TruvisionController@chartSignal');
+Route::get('patient-chart', 'TruvisionController@patientChart');

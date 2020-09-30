@@ -20,6 +20,12 @@ class EncounterController extends Controller
         //
     }
 
+    public function truvision(Encounter $encounter)
+    {
+      // dd($encounter);
+        return view('truvision.controller')->with(['en'=>$encounter]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

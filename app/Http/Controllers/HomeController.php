@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\StoreInstrument;
+use App\Encounter;
 use Auth;
 
 class HomeController extends Controller
@@ -29,4 +30,10 @@ class HomeController extends Controller
 
         return view('home', compact('ins'));
     }
+
+    public function techHome(){
+      $ens = Encounter::where('complete', 0)->get();
+      return view('tech-home', compact('ens'));
+    }
+
 }

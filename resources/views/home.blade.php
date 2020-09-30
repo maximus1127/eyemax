@@ -65,7 +65,7 @@
                     <br />
                     <div class="row">
                       <div class="col-3">
-                        <button class="btn btn-danger" id="lm-button" onclick="lensometerModal()">Select</button>
+                        <button class="btn btn-danger" id="lm-button" onclick="autolensometerModal()">Select</button>
                       </div>
                       <div class="col-9">
                         <p id="lmInfo">No Data Selected</p>
@@ -80,7 +80,7 @@
                     <br />
                     <div class="row">
                       <div class="col-3">
-                        <button class="btn btn-danger" id="km-button" onclick="keratometerModal()">Select</button>
+                        <button class="btn btn-danger" id="km-button" onclick="autokeratometerModal()">Select</button>
                       </div>
                       <div class="col-9">
                         <p id="kmInfo">No Data Selected</p>
@@ -93,11 +93,11 @@
         </div>
     </div>
 </div>
-@include('modals.modals')
+@include('modals.marco_modals')
 @endsection
 
 @section('footer-scripts')
-  <script src="{{asset('js\modal_functions.js')}}"></script>
+  <script src="{{asset('js\marco_modal_functions.js')}}"></script>
 
   <script src="{{asset('js/serialclass.js')}}"> </script>
   <script src="{{asset('js/serialconnections.js')}}"> </script>
