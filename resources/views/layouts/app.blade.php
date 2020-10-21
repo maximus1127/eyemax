@@ -17,7 +17,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="https://8a20e89333d6.ngrok.io/css/app.css" rel="stylesheet">
     @yield('header-styles')
 </head>
 <body>

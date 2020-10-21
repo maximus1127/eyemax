@@ -7,7 +7,20 @@
     <meta name="author" content="">
 
     <title>Truvision Acuity</title>
-    <link href="{{asset('/css/truvision_controller.css')}}" rel="stylesheet"/>
+    <link href="{{asset("/css/truvision_controller.css")}}" rel="stylesheet"/>
+    <style>
+      .vision-div{
+        border: 2px solid #810815;
+        margin: 10px;
+        width: 20%;
+        color: white;
+        text-align: center;
+        padding-top: 10px;
+        background-color: gray;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+    </style>
 </head>
 
 <body class="container" onload="initialTrigger()">
@@ -140,7 +153,7 @@
 
 				      <div class="ref-data" id="specRx">
                 <label><u>Spec Rx</u></label>
-                <p>{{$en->la01}} {{($en->la02 != null? $en->la02.' x '.$en->la03 : "")}} <span style="color: lightsteelblue; float:right">Add: {{$en->la04}}</span> <br /> {{$en->la05}} {{($en->la06 != null? $en->la06.' x '.$en->la07 : "")}} <span style="color: lightsteelblue; float:right">Add: {{$en->la08}}</span></p>
+                <p>{{$en->la01}} {{($en->la02 != null? $en->la02.' x '.$en->la03 : "")}} <br /> {{$en->la05}} {{($en->la06 != null? $en->la06.' x '.$en->la07 : "")}} <br /><span style="color: lightsteelblue; float:left">Add: {{$en->la08}}</span></p>
               </div>
               <div class="ref-data" id="arRx">
                 <label><u>Auto Ref</u></label>
@@ -148,13 +161,14 @@
               </div>
         </div>
         <div class="row justify-content-center">
-              <div class="ref-data ref-data-active" id="subjRx">
+              <div class="ref-data ref-data-active" id="subjRx" style="line-height: 10px;">
                 <label><u>Subjective</u></label>
-                <p><span class="odSphere">{{$en->la01 ?? $en->ar02 ?? "+0.00"}}</span><span class="odCyl"> {{$en->la02 ?? $en->ar03 ?? "-0.00"}}</span> x <span class="odAxis">{{$en->la03 ?? $en->ar04 ?? "180"}}</span> <span style="color: lightsteelblue; float:right">Add: <span class="odAdd">{{$en->la04 ?? ""}}</span></span>
-                <br />
-                <span class="osSphere">{{$en->la05 ?? $en->ar05 ?? "+0.00"}}</span><span class="osCyl"> {{$en->la06 ?? $en->ar06 ?? "-0.00"}}</span> x <span class="osAxis">{{$en->la07 ?? $en->ar07 ?? "180"}}</span> <span style="color: lightsteelblue; float: right">Add: <span class="osAdd">{{$en->la08 ??""}}</span> </span></p>
+                <p><span class="odSphere">{{$en->la01 ?? $en->ar02 ?? "+0.00"}}</span><span class="odCyl"> {{$en->la02 ?? $en->ar03 ?? "-0.00"}}</span> x <span class="odAxis">{{$en->la03 ?? $en->ar04 ?? "180"}}</span> <span style="color: lightsteelblue; float:right" id="odDistVisionSubj"></span></span></p>
+                <p><span class="osSphere">{{$en->la05 ?? $en->ar05 ?? "+0.00"}}</span><span class="osCyl"> {{$en->la06 ?? $en->ar06 ?? "-0.00"}}</span> x <span class="osAxis">{{$en->la07 ?? $en->ar07 ?? "180"}}</span> <span style="color: lightsteelblue; float:right" id="osDistVisionSubj"></span></span></p>
+                <p><span style="color: lightsteelblue; float: right" id="ouDistVisionSubj"></span></p><br />
+                <p><span style="color: lightsteelblue; float: left">Add: <span class="osAdd">{{$en->la08 ??""}}</span></p>
               </div>
-              <div class="ref-data" id="finRx">
+              <div class="ref-data" id="finRx" style="line-height: 10px;">
                 <label><u>Final</u></label>
                 <p id="finRxp"></p>
               </div>
@@ -171,8 +185,9 @@
               <button class="phorButton ouButtons" disabled  data-size="" id="ouSelect">OU</button>
               <button class="phorButton osButtons" disabled  data-size="" id="osSelect">OS</button>
             </div>
+
             <div class="row justify-content-center ">
-      				<button class="phorButton odButtons odSphere" disabled  data-size="" >{{$en->la01 ?? $en->ar02 ?? "+0.00"}}</button>
+      				<button class="phorButton odButtons odSphere" disabled  data-size="" >{{str_replace(' ', '',$en->la01) ?? $en->ar02 ?? "+0.00"}}</button>
       				<button class="phorButton ouButtons" disabled  data-size="">Sphere</button>
       				<button class="phorButton osButtons osSphere" disabled  data-size="" >{{$en->la05 ?? $en->ar05 ?? "+0.00"}}</button>
             </div>
@@ -199,10 +214,10 @@
 
 </div>
 
-  <script src="{{asset('js/app.js')}}"></script>
-	<script type="text/javascript" src="/js/truvision_control_screen.js"></script>
+  <script src="{{asset("/js/app.js")}}"></script>
   <script> var refInfo = {!! $en !!}; </script>
-  <script type="text/javascript" src="/js/marco_phoropter.js"></script>
+  <script type="text/javascript" src="{{asset("/js/marco_phoropter.js")}}"></script>
+  <script type="text/javascript" src="{{asset("/js/truvision_control_screen.js")}}"></script>
 
 </body>
 </html>

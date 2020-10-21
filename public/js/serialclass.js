@@ -5,26 +5,40 @@ class SerialLEDController {
         this.decoder = new TextDecoder();
     }
     async init(but) {
-        if ('serial' in navigator) {
+        if ("serial" in navigator) {
             try {
                 const port = await navigator.serial.requestPort();
                 await port.open({
-                    baudrate: 9600
+                    baudRate: 9600,
+                    parity: "odd",
+                    dataBits: 8,
+                    stopBits: 1
                 });
                 this.reader = port.readable.getReader();
                 this.writer = port.writable.getWriter();
                 let signals = await port.getSignals();
-                $(but).removeClass('btn-danger');
-                $(but).addClass('btn-success');
+                $(but).removeClass("btn-danger");
+                $(but).addClass("btn-success");
                 console.log(signals);
             } catch (err) {
-                console.error('There was an error opening the serial port:', err);
+                console.error(
+                    "There was an error opening the serial port:",
+                    err
+                );
             }
         } else {
-            console.error('Web serial doesn\'t seem to be enabled in your browser. Try enabling it by visiting:');
-            console.error('chrome://flags/#enable-experimental-web-platform-features');
-            console.error('opera://flags/#enable-experimental-web-platform-features');
-            console.error('edge://flags/#enable-experimental-web-platform-features');
+            console.error(
+                "Web serial doesn't seem to be enabled in your browser. Try enabling it by visiting:"
+            );
+            console.error(
+                "chrome://flags/#enable-experimental-web-platform-features"
+            );
+            console.error(
+                "opera://flags/#enable-experimental-web-platform-features"
+            );
+            console.error(
+                "edge://flags/#enable-experimental-web-platform-features"
+            );
         }
     }
     async write(data) {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Instrument;
 use Illuminate\Http\Request;
+use App\Events\PhoropterSequence;
 
 class InstrumentController extends Controller
 {
@@ -15,6 +16,10 @@ class InstrumentController extends Controller
     public function index()
     {
         //
+    }
+
+    public function marcoPhoropter(Request $request){
+      event(new PhoropterSequence($request->refractive_info, $request->ri_type, $request->location));
     }
 
     /**

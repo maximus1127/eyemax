@@ -97,10 +97,12 @@
 @endsection
 
 @section('footer-scripts')
-  <script src="{{asset('js\marco_modal_functions.js')}}"></script>
+  <script src="https://8a20e89333d6.ngrok.io/js/app.js"></script>
+  <script src="https://8a20e89333d6.ngrok.io/js/marco_modal_functions.js"></script>
 
-  <script src="{{asset('js/serialclass.js')}}"> </script>
-  <script src="{{asset('js/serialconnections.js')}}"> </script>
+  <script src="https://8a20e89333d6.ngrok.io/js/serialclass.js"> </script>
+  <script src="https://8a20e89333d6.ngrok.io/js/serialconnections.js"> </script>
+  <script src="https://8a20e89333d6.ngrok.io/js/phoropter-socket-responses.js"></script>
   <script>
 
     $(document).ready(function(){

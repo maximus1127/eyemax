@@ -1,25 +1,30 @@
 var changeAmount = 0.25;
 var axisChangeAmount = 1;
+var dist = "far";
 var subjectiveData = [];
 var finalData = [];
+
 var specData = [
     refInfo.la01,
-    refInfo.la02,
-    refInfo.la03,
-    refInfo.la04,
     refInfo.la05,
+    refInfo.la02,
     refInfo.la06,
+    refInfo.la03,
     refInfo.la07,
+    refInfo.la04,
     refInfo.la08
 ];
+
 var arData = [
     refInfo.ar02,
-    refInfo.ar03,
-    refInfo.ar04,
     refInfo.ar05,
+    refInfo.ar03,
     refInfo.ar06,
+    refInfo.ar04,
     refInfo.ar07
 ];
+var sphEqOD = 0;
+var sphEqOS = 0;
 var plano = ["0.00", "0.00", "0.00", "0.00", "000", "000"];
 var planoOn = false;
 var phorButtons = $(".phorButton");
@@ -91,9 +96,9 @@ $(document).keydown(function(event) {
                     numeral(osSph).format("+0.00")
                 );
             } else {
-                curPow = parseFloat(
-                    $(".ref-data-active ." + curEye + "Sphere").html()
-                );
+                org_val = $(".ref-data-active ." + curEye + "Sphere").html();
+                trim_val = org_val.replace("+", "");
+                curPow = parseFloat(trim_val);
                 curPow -= changeAmount;
                 $(".ref-data-active ." + curEye + "Sphere").html(
                     numeral(curPow).format("+0.00")
@@ -112,6 +117,39 @@ $(document).keydown(function(event) {
                 $(".ref-data-active ." + curEye + "Cyl").html()
             );
             curPow -= changeAmount;
+            //calculate spherical equivalent
+            if (curEye == "od") {
+                if (Math.abs(sphEqOD - curPow) >= 0.5) {
+                    sphEqOD = curPow;
+                    curSph = parseFloat(
+                        $(".ref-data-active ." + curEye + "Sphere").html()
+                    );
+                    curSph += changeAmount;
+                    $(".ref-data-active ." + curEye + "Sphere").html(
+                        numeral(curSph).format("+0.00")
+                    );
+                    var elems = document.getElementsByClassName(
+                        "phorEyeActive " + curEye + "Sphere"
+                    );
+                    $(elems).html(numeral(curSph).format("+0.00"));
+                }
+            } else if (curEye == "os") {
+                if (Math.abs(sphEqOS - curPow) >= 0.5) {
+                    sphEqOS = curPow;
+                    curSph = parseFloat(
+                        $(".ref-data-active ." + curEye + "Sphere").html()
+                    );
+                    curSph += changeAmount;
+                    $(".ref-data-active ." + curEye + "Sphere").html(
+                        numeral(curSph).format("+0.00")
+                    );
+                    var elems = document.getElementsByClassName(
+                        "phorEyeActive " + curEye + "Sphere"
+                    );
+                    $(elems).html(numeral(curSph).format("+0.00"));
+                }
+            }
+            //end calculate spherical equivalent
             $(".ref-data-active ." + curEye + "Cyl").html(
                 numeral(curPow).format("+0.00")
             );
@@ -124,7 +162,42 @@ $(document).keydown(function(event) {
             curPow = parseFloat(
                 $(".ref-data-active ." + curEye + "Cyl").html()
             );
-            curPow += changeAmount;
+            if (curPow != 0) {
+                curPow += changeAmount;
+            }
+            //calculate spherical equivalent
+            if (curEye == "od") {
+                if (Math.abs(sphEqOD - curPow) >= 0.5) {
+                    sphEqOD = curPow;
+                    curSph = parseFloat(
+                        $(".ref-data-active ." + curEye + "Sphere").html()
+                    );
+                    curSph -= changeAmount;
+                    $(".ref-data-active ." + curEye + "Sphere").html(
+                        numeral(curSph).format("+0.00")
+                    );
+                    var elems = document.getElementsByClassName(
+                        "phorEyeActive " + curEye + "Sphere"
+                    );
+                    $(elems).html(numeral(curSph).format("+0.00"));
+                }
+            } else if (curEye == "os") {
+                if (Math.abs(sphEqOS - curPow) >= 0.5) {
+                    sphEqOS = curPow;
+                    curSph = parseFloat(
+                        $(".ref-data-active ." + curEye + "Sphere").html()
+                    );
+                    curSph -= changeAmount;
+                    $(".ref-data-active ." + curEye + "Sphere").html(
+                        numeral(curSph).format("+0.00")
+                    );
+                    var elems = document.getElementsByClassName(
+                        "phorEyeActive " + curEye + "Sphere"
+                    );
+                    $(elems).html(numeral(curSph).format("+0.00"));
+                }
+            }
+            //end calculate spherical equivalent
             $(".ref-data-active ." + curEye + "Cyl").html(
                 numeral(curPow).format("+0.00")
             );
@@ -141,6 +214,7 @@ $(document).keydown(function(event) {
                 $(".ref-data-active ." + curEye + "Axis").html()
             );
             curPow -= axisChangeAmount;
+
             if (curPow < 1) curPow = 180;
             $(".ref-data-active ." + curEye + "Axis").html(
                 numeral(curPow).format("000")
@@ -170,18 +244,18 @@ $(document).keydown(function(event) {
         if (event.which == 109) {
             curPow = parseFloat($(phorButtons[14]).html());
             curPow -= changeAmount;
-            $(".ref-data-active .odAdd").html(numeral(curPow).format("0.00"));
-            $(".ref-data-active .osAdd").html(numeral(curPow).format("0.00"));
-            $(phorButtons[12]).html(numeral(curPow).format("0.00"));
-            $(phorButtons[14]).html(numeral(curPow).format("0.00"));
+            $(".ref-data-active .odAdd").html(numeral(curPow).format("+0.00"));
+            $(".ref-data-active .osAdd").html(numeral(curPow).format("+0.00"));
+            $(phorButtons[12]).html(numeral(curPow).format("+0.00"));
+            $(phorButtons[14]).html(numeral(curPow).format("+0.00"));
         }
         if (event.which == 107) {
             curPow = parseFloat($(phorButtons[14]).html());
             curPow += changeAmount;
-            $(".ref-data-active .odAdd").html(numeral(curPow).format("0.00"));
-            $(".ref-data-active .osAdd").html(numeral(curPow).format("0.00"));
-            $(phorButtons[12]).html(numeral(curPow).format("0.00"));
-            $(phorButtons[14]).html(numeral(curPow).format("0.00"));
+            $(".ref-data-active .odAdd").html(numeral(curPow).format("+0.00"));
+            $(".ref-data-active .osAdd").html(numeral(curPow).format("+0.00"));
+            $(phorButtons[12]).html(numeral(curPow).format("+0.00"));
+            $(phorButtons[14]).html(numeral(curPow).format("+0.00"));
         }
         // end plus or minus add
 
@@ -195,7 +269,19 @@ $(document).keydown(function(event) {
             $("*").removeClass("phorEyeActive");
             $(".osButtons").addClass("phorEyeActive");
         }
-
+        if (event.which == 101) {
+            curEye = "ou";
+            $("*").removeClass("phorEyeActive");
+            $([phorButtons[1], phorButtons[3], phorButtons[5]]).addClass(
+                "phorEyeActive"
+            );
+        }
+        if (event.which == 34) {
+            dist = "near";
+        }
+        if (event.which == 33) {
+            dist = "far";
+        }
         if ($("#subjRx").hasClass("ref-data-active")) {
             createSubjectiveDataArray();
         } else if ($("#finRx").hasClass("ref-data-active")) {
@@ -204,20 +290,14 @@ $(document).keydown(function(event) {
 
         if (event.which == 13) {
             $("#finRxp").html("");
-            console.log(finalData);
+            // console.log(finalData);
             $("#finRxp").html(`
-        <span class="odSphere">${subjectiveData[1]}</span><span class="odCyl"> ${subjectiveData[3]}</span> x <span class="odAxis">${subjectiveData[5]}</span> <span style="color: lightsteelblue; float:right">Add: <span class="odAdd">${subjectiveData[7]}</span></span>
-        <br />
-        <span class="osSphere">${subjectiveData[2]}</span><span class="osCyl">${subjectiveData[4]}</span> x <span class="osAxis">${subjectiveData[6]}</span> <span style="color: lightsteelblue; float: right">Add: <span class="osAdd">${subjectiveData[8]}</span> </span>
+        <p><span class="odSphere">${subjectiveData[1]}</span><span class="odCyl"> ${subjectiveData[3]}</span> x <span class="odAxis">${subjectiveData[5]}</span> <span style="color: lightsteelblue; float:right" id="odDistVisionFinal"></span></p>
+        <p><span class="osSphere">${subjectiveData[2]}</span><span class="osCyl"> ${subjectiveData[4]}</span> x <span class="osAxis">${subjectiveData[6]}</span> <span style="color: lightsteelblue; float: right" id="osDistVisionFinal"></span></p>
+        <p><span style="color: lightsteelblue; float: right" id="ouDistVisionFinal"></span></p><br />
+        <p><span style="color: lightsteelblue; float: left">Add: <span class="osAdd">${subjectiveData[8]}</span></p>
         `);
             finalData = [...subjectiveData];
-        }
-        if (event.which == 101) {
-            curEye = "ou";
-            $("*").removeClass("phorEyeActive");
-            $([phorButtons[1], phorButtons[3], phorButtons[5]]).addClass(
-                "phorEyeActive"
-            );
         }
     }
 });
@@ -232,6 +312,8 @@ $(document).keyup(function(event) {
 $(document).ready(function() {
     $(".odButtons").addClass("phorEyeActive");
     createSubjectiveDataArray();
+    sphEqOD = parseFloat($(phorButtons[6]).html());
+    sphEqOS = parseFloat($(phorButtons[8]).html());
 });
 
 $(".ref-data").click(function(d) {
@@ -309,7 +391,7 @@ function createSubjectiveDataArray() {
         }
     });
     subjectiveData.unshift(curEye);
-
+    subjectiveData[subjectiveData.length] = dist;
     sendData(subjectiveData, "subj");
 }
 
@@ -325,5 +407,14 @@ function createFinalDataArray() {
 }
 
 function sendData(data, ar) {
-    console.log(data + " " + ar);
+    console.log(data);
+    $.ajax({
+        url: "/phoropter-sequence",
+        type: "post",
+        data: {
+            refractive_info: data,
+            ri_type: ar,
+            location: refInfo.store_location_id
+        }
+    });
 }

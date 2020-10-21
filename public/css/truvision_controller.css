@@ -479,7 +479,7 @@ small {
 .ref-data {
     border: 1px solid white;
     float: left;
-    height: 100px;
+    height: 130px;
     margin: 10px;
     width: 30%;
     color: white;
@@ -491,7 +491,7 @@ small {
     border: 1px solid white;
     float: left;
     background-image: linear-gradient(to right, #022140, #140289);
-    height: 100px;
+    height: 130px;
     margin: 10px;
     width: 30%;
     color: white;

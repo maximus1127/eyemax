@@ -23,7 +23,7 @@ var singleLetter = false;
 var colorMode = false;
 var currentLine;
 
-Echo.channel(localStorage.getItem("location").toString()).listen(
+Echo.channel(refInfo.store_location_id.toString()).listen(
     "ChartSignal",
     data => {
         switch (data.size) {
@@ -107,10 +107,10 @@ Echo.channel(localStorage.getItem("location").toString()).listen(
         var numbers4 = data.numbers4;
         var numbers5 = data.numbers5;
         var numbers6 = data.numbers6;
-        console.log(data);
+        // console.log(data);
         if (data.size == "singleFilter") {
             singleLetter = !singleLetter;
-            console.log(singleLetter);
+            // console.log(singleLetter);
             if (singleLetter == true) {
                 $("#singleFilter").removeClass("singleFilter");
                 $("#singleFilter").addClass("singleFilterActive");
@@ -266,7 +266,7 @@ Echo.channel(localStorage.getItem("location").toString()).listen(
             data.size == 70
         ) {
             clear();
-            console.log(data.hotv);
+            // console.log(data.hotv);
 
             if (fontType == false && singleLetter == false) {
                 $("#line1").html(
@@ -1272,7 +1272,7 @@ $(document).ready(function() {
             url: "/chart-signal",
             data: {
                 size: numbers,
-                location: localStorage.getItem("location")
+                location: refInfo.store_location_id
             },
             success: function(response) {
                 // $("p").html(response + ": " + numbers);
@@ -1472,7 +1472,36 @@ $("html").on("keydown", function(event) {
         }
     }
 
-    if (event.which == 191) {
-        $("#movie").trigger("click");
+    if (event.which == 32) {
+        event.preventDefault();
+        if ($(".ref-data-active").attr("id") == "subjRx") {
+            if (curEye == "od") {
+                $("#odDistVisionSubj").html(
+                    "20/" + $(".lineButtonActive").data("size")
+                );
+            } else if (curEye == "os") {
+                $("#osDistVisionSubj").html(
+                    "20/" + $(".lineButtonActive").data("size")
+                );
+            } else if (curEye == "ou") {
+                $("#ouDistVisionSubj").html(
+                    "OU: 20/" + $(".lineButtonActive").data("size")
+                );
+            }
+        } else {
+            if (curEye == "od") {
+                $("#odDistVisionFinal").html(
+                    "20/" + $(".lineButtonActive").data("size")
+                );
+            } else if (curEye == "os") {
+                $("#osDistVisionFinal").html(
+                    "20/" + $(".lineButtonActive").data("size")
+                );
+            } else if (curEye == "ou") {
+                $("#ouDistVisionFinal").html(
+                    "OU: 20/" + $(".lineButtonActive").data("size")
+                );
+            }
+        }
     }
 });

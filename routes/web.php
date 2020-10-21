@@ -34,3 +34,6 @@ Route::get('/truvision/{encounter}', 'EncounterController@truvision')->name('tru
 
 Route::get('/chart-signal', 'TruvisionController@chartSignal');
 Route::get('patient-chart', 'TruvisionController@patientChart');
+
+
+Route::post('/phoropter-sequence', "InstrumentController@marcoPhoropter");
