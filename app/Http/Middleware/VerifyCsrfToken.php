@@ -13,6 +13,9 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         '/assign-ar',
-        '/phoropter-sequence'
+        '/phoropter-sequence',
+        '/final-send',
+        '/calibrate',
+        '/encounter-complete'
     ];
 }

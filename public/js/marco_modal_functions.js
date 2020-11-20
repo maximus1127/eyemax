@@ -22,8 +22,8 @@ function ptModal() {
                 available_encounters[d] = this;
                 $("#ptInfoBody").append(`
             <tr ondblclick="selectPt(${d})">
+            <td>${this.pt_name}</td>
               <td id="pt_id">${this.pt_id}</td>
-              <td>${this.pt_name}</td>
             </tr>
             `);
             });
@@ -35,10 +35,32 @@ function ptModal() {
 function selectPt(en) {
     e = available_encounters[en];
     $("#ptInfo").html(`${e.pt_name} <br> ${e.pt_id}`);
+    $("#encounter_number").val(`${e.pt_id}`);
     $("#pat-button").removeClass("btn-danger");
     $("#pat-button").addClass("btn-success");
     $("#ptInfoModal").modal("hide");
 }
+
+function enterManualPt() {
+    var pt = prompt("Enter Encounter Number");
+    $.ajax({
+        url: "/api/new-encounter",
+        type: "post",
+        data: {
+            location: localStorage.getItem("location"),
+            pt_id: pt,
+            pt_name: ""
+        },
+        success: function() {
+            $("#ptInfo").html(`${pt}`);
+            $("#encounter_number").val(`${pt}`);
+            $("#pat-button").removeClass("btn-danger");
+            $("#pat-button").addClass("btn-success");
+            $("#ptInfoModal").modal("hide");
+        }
+    });
+}
+
 // end patient info selection
 
 // autorefractor selection

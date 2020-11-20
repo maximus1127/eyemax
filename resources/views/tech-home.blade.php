@@ -19,8 +19,8 @@
       @foreach($ens as $e)
       <tr>
         <th scope="row">{{$e->store_location_id}}</th>
-        <td><a href="{{route('truvision', $e->id)}}">{{$e->pt_name}}</a></td>
-        <td>{{$e->pt_id}}</td>
+        <td>{{$e->pt_name}}</td>
+        <td><a href="{{route('truvision', $e->id)}}">{{$e->pt_id}}</a></td>
         <td>{{Carbon\Carbon::parse($e->created_at)->format('m/d g:i A')}}</td>
       </tr>
 @endforeach

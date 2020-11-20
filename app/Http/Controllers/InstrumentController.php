@@ -21,6 +21,9 @@ class InstrumentController extends Controller
     public function marcoPhoropter(Request $request){
       event(new PhoropterSequence($request->refractive_info, $request->ri_type, $request->location));
     }
+    public function marcoPhoropterJcc(Request $request){
+      event(new JccSequence($request->jcc, $request->location));
+    }
 
     /**
      * Show the form for creating a new resource.

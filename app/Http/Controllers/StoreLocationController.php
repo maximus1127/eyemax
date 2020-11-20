@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\StoreLocation;
 use Illuminate\Http\Request;
+use App\User;
+use Illuminate\Support\Facades\Hash;
 
 class StoreLocationController extends Controller
 {
@@ -35,7 +37,28 @@ class StoreLocationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $store = new StoreLocation();
+        $store->name = $request->name;
+        $store->store_number = $request->number;
+        $store->street = $request->street;
+        $store->city = $request->city;
+        $store->state = $request->state;
+        $store->save();
+    }
+
+    public function addUser(Request $request)
+    {
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->store_location_id = $request->store;
+        $user->password = Hash::make($request->password);
+        $user->save();
+    }
+
+    public function deleteUser(User $user){
+      $user->delete();
+      return redirect('/admin-panel');
     }
 
     /**

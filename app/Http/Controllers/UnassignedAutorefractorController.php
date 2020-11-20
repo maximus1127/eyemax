@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use App\StoreLocation;
 use Orchestra\Parser\Xml\Facade as XmlParser;
 use Auth;
-
+use App\Events\AddEncounter;
+use Illuminate\Support\Facades\Log;
 class UnassignedAutorefractorController extends Controller
 {
     /**
@@ -28,8 +29,14 @@ class UnassignedAutorefractorController extends Controller
         return response()->json($ars);
     }
 
-    public function receiveMarco(Request $request)
+
+    public function alertMarco(Request $request){
+        event(new AddEncounter($request->location));
+    }
+
+    public function receiveMarco(Request $request) //applies AR and LM and KM
     {
+
         $store = StoreLocation::where('store_number', $request->location)->first();
         $xml = XmlParser::load($request->file('marco'));
         $ar = $xml->parse([

@@ -21,3 +21,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/new-encounter', 'EncounterController@store');
 Route::post('/receive-marco-ar', 'UnassignedAutorefractorController@receiveMarco');
+Route::post('/marco-alert', 'UnassignedAutorefractorController@alertMarco');

@@ -28,12 +28,20 @@ Route::post('/assign-ar', 'EncounterController@update');
 
 Route::get('/tech-home', 'HomeController@techHome');
 Route::get('/truvision/{encounter}', 'EncounterController@truvision')->name('truvision');
+Route::get("/admin-panel", "HomeController@admin");
+Route::post('/add-location', 'StoreLocationController@store');
+Route::post('/add-user', 'StoreLocationController@addUser');
+Route::get('/delete-user/{user}', 'StoreLocationController@deleteUser');
+Route::post('/encounter-complete', 'EncounterController@complete');
 
 
 //Truvision Routes
 
 Route::get('/chart-signal', 'TruvisionController@chartSignal');
-Route::get('patient-chart', 'TruvisionController@patientChart');
+Route::get('/patient-chart', 'TruvisionController@patientChart');
+Route::post('/calibrate', 'TruvisionController@calibrate');
 
 
 Route::post('/phoropter-sequence', "InstrumentController@marcoPhoropter");
+Route::post('/jcc-sequence', "InstrumentController@marcoPhoropterJcc");
+Route::post('/final-send', 'EncounterController@finalize');

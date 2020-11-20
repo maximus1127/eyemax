@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\StoreLocation;
 use Auth;
 use App\UnassignedAutorefractor;
+use App\Events\AddEncounter;
 
 class EncounterController extends Controller
 {
@@ -119,6 +120,45 @@ class EncounterController extends Controller
           $oldAr->save();
         }
         $en->save();
+    }
+
+
+    //enter pushed twice on control screen, fires socket to reset home window
+    public function finalize(Request $request){
+      event(new AddEncounter($request->encounter, $request->finalInfo, $request->location));
+    }
+
+    //this is the route from the socket command in "finalize" above. it is the last step before the home screen is reset for a new patient.
+    public function complete(Request $request)
+    {
+
+      $e = Encounter::where('pt_id', $request->encounter)->first();
+      $e->ap01 = $request->finalInfo[15];
+      $e->ap02 = $request->finalInfo[16];
+      $e->ap03 = $request->finalInfo[17];
+      $e->ap04 = $request->finalInfo[18];
+      $e->ap05 = $request->finalInfo[19];
+      $e->ap06 = $request->finalInfo[20];
+      $e->ap07 = $request->finalInfo[21];
+      $e->ap08 = $request->finalInfo[22];
+      $e->ap09 = $request->finalInfo[23];
+      $e->ap10 = $request->finalInfo[24];
+      $e->ap11 = $request->finalInfo[25];
+      $e->ap12 = $request->finalInfo[26];
+      $e->ap13 = $request->finalInfo[27];
+      $e->ap14 = $request->finalInfo[28];
+      $e->ap15 = $request->finalInfo[29];
+      $e->ap16 = $request->finalInfo[30];
+      $e->ap17 = $request->finalInfo[31];
+      $e->ap18 = $request->finalInfo[32];
+      $e->ap19 = $request->finalInfo[33];
+      $e->ap20 = $request->finalInfo[34];
+      $e->complete = 1;
+      if($e->save()){
+        return "saved";
+      }else {
+        return "failed";
+      }
     }
 
     /**

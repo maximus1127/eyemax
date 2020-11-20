@@ -15,17 +15,17 @@
         <table style="width: 100%">
           <thead>
             <th>Pt Name</th>
-            <th>Pt Id</th>
+            <th>Encounter Id</th>
           </thead>
           <tbody id="ptInfoBody">
 
           </tbody>
         </table>
       </div>
-      {{-- <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div> --}}
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="enterManualPt()">Type Encounter Number</button>
+        {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
+      </div>
     </div>
   </div>
 </div>

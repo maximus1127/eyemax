@@ -39,6 +39,7 @@
                       </div>
                       <div class="col-9">
                         <p id="ptInfo">No Data Selected</p>
+                        <input type="hidden" id="encounter_number"/>
                       </div>
                     </div>
                   </div>
@@ -97,20 +98,32 @@
 @endsection
 
 @section('footer-scripts')
-  <script src="https://8a20e89333d6.ngrok.io/js/app.js"></script>
-  <script src="https://8a20e89333d6.ngrok.io/js/marco_modal_functions.js"></script>
-
-  <script src="https://8a20e89333d6.ngrok.io/js/serialclass.js"> </script>
-  <script src="https://8a20e89333d6.ngrok.io/js/serialconnections.js"> </script>
-  <script src="https://8a20e89333d6.ngrok.io/js/phoropter-socket-responses.js"></script>
+  
+  <script src="{{asset('/js/marco_modal_functions.js')}}"></script>
+  <script src="{{asset('/js/download.js')}}"> </script>
+  <script src="{{asset('/js/serialclass.js')}}"> </script>
+  <script src="{{asset('/js/serialconnections.js')}}"> </script>
+  <script src="{{asset('/js/phoropter-socket-responses.js')}}"></script>
+  {{-- <script src="https://2a1055a97d7d.ngrok.io/js/app.js"></script> --}}
+  {{-- <script src="https://2a1055a97d7d.ngrok.io/js/marco_modal_functions.js"></script> --}}
+  {{-- <script src="https://2a1055a97d7d.ngrok.io/js/serialclass.js"></script> --}}
+  {{-- <script src="https://2a1055a97d7d.ngrok.io/js/serialconnections.js"></script> --}}
+  {{-- <script src="https://2a1055a97d7d.ngrok.io/js/phoropter-socket-responses.js"></script> --}}
   <script>
 
+    var chart;
     $(document).ready(function(){
       if(!localStorage.getItem('location')){
         var loc = prompt('Please enter the store location number');
         localStorage.setItem('location', loc);
       }
+
+        // chart = window.open("/patient-chart","PatientChart", "width=300, height=300, toolbar = 0, status=0,");
     })
+
+
+
+
 
   </script>
 @endsection

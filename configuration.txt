@@ -1,0 +1,9 @@
+Chrome:
+
+chrome://flags
+Experimental WEb features = enable
+
+Must be served over SSL
+
+
+refInfo.pt_id is actually the emr encounter number

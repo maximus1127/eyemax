@@ -121,6 +121,16 @@ Echo.channel(refInfo.store_location_id.toString()).listen(
             $(".lineButtonActive").trigger("click");
         }
 
+        if (data.size == "circles") {
+            clear();
+            $("*.lineButtonActive").removeClass("lineButtonActive");
+            $("*.modeButtonActive").removeClass("modeButtonActive");
+            $("#circles").addClass("modeButtonActive");
+            $("#line1").html(
+                "<img src='/images/astig-dots.png' style='width: 110px; height: 110px'>"
+            );
+        }
+
         if (data.size == "retinoscopy") {
             clear();
             $("#retinoscopy").removeClass("retinoscopy");
@@ -1261,7 +1271,7 @@ function clear() {
 
 function initialTrigger() {
     $("#singleLetter").trigger("click");
-    $("#twenty").trigger("click");
+    setTimeout(() => $("#twenty").trigger("click"), 200);
 }
 
 $(document).ready(function() {
@@ -1452,7 +1462,7 @@ $("html").on("keydown", function(event) {
     if (event.which == 48) {
         $("#hotv").trigger("click");
     }
-    if (event.which == 33 || event.which == 38 || event.which == 104) {
+    if (event.which == 38) {
         if (!$("#colorPlates").hasClass("modeButtonActive")) {
             event.preventDefault();
             if (currentLine > 1) {
@@ -1461,7 +1471,7 @@ $("html").on("keydown", function(event) {
             $("button[data-clicker='" + currentLine + "']").trigger("click");
         }
     }
-    if (event.which == 34 || event.which == 40 || event.which == 98) {
+    if (event.which == 40) {
         if (!$("#colorPlates").hasClass("modeButtonActive")) {
             event.preventDefault();
             if (currentLine < 19) {

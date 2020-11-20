@@ -1,7 +1,7 @@
 <html>
 
 <head>
-<script src='/js/persist-min.js'></script>
+{{-- <script src='/js/persist-min.js'></script> --}}
   <style>
   html {
     height: 100%;
@@ -476,6 +476,14 @@ currentLine = data.size
      $("#video").html(`<video width="1040" height="880" autoplay muted>
                          <source src="{{asset('/images/rolypoly.webm')}}" type="video/webm">
                        </video>`);
+   }
+
+   if(size == 'circles'){
+     clear();
+     $("h2").html('');
+     $("#color").show();
+     $("#color").html(`<img src="{{asset('/images/astig-dots.png')}}" style="width: 400px; height: 400px;"/>`);
+
    }
 
    if(size == "movie"){
@@ -1142,23 +1150,7 @@ currentLine = data.size
 
 
 
-  function grow(){
-      currentZoom += 1;
-      $("#content").css('font-size', currentZoom + 'px');
-      localStorage.setItem("size", currentZoom);
 
-      // $("#content").css('height', currentZoom + 'px');
-      // document.cookie = "storeSize="+currentZoom+"; expires=Thu, 18 Dec 2040 12:00:00 UTC;"
-      // localStorage.setItem("storeSize", currentZoom);
-      // console.log("grow triggered");
-  }
-
-
-  function shrink(){
-     currentZoom -= 1;
-     $("#content").css('font-size', currentZoom + 'px');
-     localStorage.setItem('size', currentZoom);
-  }
 
 
 
@@ -1167,21 +1159,61 @@ currentLine = data.size
 
 });
 //replace up here
+function grow(){
+    currentZoom += 1;
+
+    localStorage.setItem("size", currentZoom);
+    $.ajax({
+      url: '/calibrate',
+      type: 'post',
+      data: {
+        calibration: currentZoom,
+        location: localStorage.getItem('location')
+      },
+      success: function(){
+        $("#content").css('font-size', currentZoom + 'px');
+      }
+    })
+    // $("#content").css('height', currentZoom + 'px');
+    // document.cookie = "storeSize="+currentZoom+"; expires=Thu, 18 Dec 2040 12:00:00 UTC;"
+    // localStorage.setItem("storeSize", currentZoom);
+    // console.log("grow triggered");
+}
+
+
+function shrink(){
+   currentZoom -= 1;
+   localStorage.setItem('size', currentZoom);
+   $.ajax({
+     url: '/calibrate',
+     type: 'post',
+     data: {
+       calibration: currentZoom,
+       location: localStorage.getItem('location')
+     },
+     success: function(){
+       $("#content").css('font-size', currentZoom + 'px');
+     }
+   })
+}
+
+$(document).keydown(event=>{
+  if(event.which == 187){
+    grow()
+  }
+  if(event.which == 189){
+    shrink()
+  }
+})
+
 
   $(document).ready(function(){
-
-
-
     var numbers;
-
     if (!localStorage.getItem('size')) {
       currentZoom = 40;
     } else {
-
-    $("#content").css('font-size', localStorage.getItem('size') + "px");
-
+      $("#content").css('font-size', localStorage.getItem('size') + "px");
     }
-
     var invert2 = localStorage.getItem('mirror');
     if (invert2 == 1){
         $("#testDisplay").addClass("mirror");

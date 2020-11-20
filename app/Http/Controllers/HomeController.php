@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\StoreInstrument;
 use App\Encounter;
 use Auth;
+use App\StoreLocation;
+use App\User;
 
 class HomeController extends Controller
 {
@@ -34,6 +36,13 @@ class HomeController extends Controller
     public function techHome(){
       $ens = Encounter::where('complete', 0)->get();
       return view('tech-home', compact('ens'));
+    }
+
+
+    public function admin(){
+      $stores = StoreLocation::all();
+      $techs = User::all();
+      return view('admin-home', compact('stores', 'techs'));
     }
 
 }

@@ -10,14 +10,15 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    {{-- <script src="{{ asset('js/app.js') }}" defer></script> --}}
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="https://8a20e89333d6.ngrok.io/css/app.css" rel="stylesheet">
+    <link href="{{asset('/css/app.css')}}" rel="stylesheet">
+    {{-- <link href="https://2a1055a97d7d.ngrok.io/css/app.css" rel="stylesheet" /> --}}
     @yield('header-styles')
 </head>
 <body>
@@ -34,7 +35,11 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+                      @auth
+                        @if(Auth::user()->role == "admin")
+                      <li><a class="nav-link" href="/admin-panel">Admin</a></li>
+                    @endif
+                    @endauth
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -78,6 +83,7 @@
         </main>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{asset('/js/app.js')}}"></script>
     @yield('footer-scripts')
 
 </body>

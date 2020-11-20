@@ -1,34 +1,48 @@
 var changeAmount = 0.25;
 var axisChangeAmount = 1;
-var dist = "far";
 var subjectiveData = [];
+var staticSubjective = [];
+var staticFinal = [];
 var finalData = [];
+var finalPush = 0;
 
 var specData = [
-    refInfo.la01,
-    refInfo.la05,
-    refInfo.la02,
-    refInfo.la06,
-    refInfo.la03,
-    refInfo.la07,
-    refInfo.la04,
-    refInfo.la08
+    "RS" + numeral(refInfo.la01).format("+00.00"),
+    "LS" + numeral(refInfo.la05).format("+00.00"),
+    "RC" + numeral(refInfo.la02).format("+00.00"),
+    "LC" + numeral(refInfo.la06).format("+00.00"),
+    "RA" + numeral(refInfo.la03).format("000"),
+    "LA" + numeral(refInfo.la07).format("000"),
+    "RD" + numeral(refInfo.la04).format("+00.00"),
+    "LD" + numeral(refInfo.la08).format("+00.00")
 ];
 
 var arData = [
-    refInfo.ar02,
-    refInfo.ar05,
-    refInfo.ar03,
-    refInfo.ar06,
-    refInfo.ar04,
-    refInfo.ar07
+    "RS" + numeral(refInfo.ar02).format("+00.00"),
+    "LS" + numeral(refInfo.ar05).format("+00.00"),
+    "RC" + numeral(refInfo.ar03).format("+00.00"),
+    "LC" + numeral(refInfo.ar06).format("+00.00"),
+    "RA" + numeral(refInfo.ar04).format("000"),
+    "LA" + numeral(refInfo.ar07).format("000")
 ];
 var sphEqOD = 0;
 var sphEqOS = 0;
 var plano = ["0.00", "0.00", "0.00", "0.00", "000", "000"];
+var planoWithPref = [
+    "RS+00.00",
+    "RC-00.00",
+    "RA000",
+    "LS+00.00",
+    "LC-00.00",
+    "LA000"
+];
 var planoOn = false;
 var phorButtons = $(".phorButton");
 var curEye = "od";
+var axisOD = null;
+var axisOS = null;
+var jccStatus = 1;
+var jccMode = 0;
 $(document).keydown(function(event) {
     if ($("#odSelect").hasClass("phorEyeActive")) {
         curEye = "od";
@@ -64,7 +78,13 @@ $(document).keydown(function(event) {
                 $(".ref-data-active .osSphere").html(
                     numeral(osSph).format("+0.00")
                 );
+                dataToSend = [
+                    "RS" + numeral(odSph).format("+00.00"),
+                    "LS" + numeral(osSph).format("+00.00")
+                ];
+                sendData(dataToSend);
             } else {
+                dataToSend = "";
                 curPow = parseFloat(
                     $(".ref-data-active ." + curEye + "Sphere").html()
                 );
@@ -76,6 +96,13 @@ $(document).keydown(function(event) {
                     "phorEyeActive " + curEye + "Sphere"
                 );
                 $(elems).html(numeral(curPow).format("+0.00"));
+
+                if (curEye == "od") {
+                    dataToSend = ["RS" + numeral(curPow).format("+00.00")];
+                } else {
+                    dataToSend = ["LS" + numeral(curPow).format("+00.00")];
+                }
+                sendData(dataToSend);
             }
         }
         if (event.which == 103) {
@@ -95,6 +122,11 @@ $(document).keydown(function(event) {
                 $(".ref-data-active .osSphere").html(
                     numeral(osSph).format("+0.00")
                 );
+                dataToSend = [
+                    "RS" + numeral(odSph).format("+00.00"),
+                    "LS" + numeral(osSph).format("+00.00")
+                ];
+                sendData(dataToSend);
             } else {
                 org_val = $(".ref-data-active ." + curEye + "Sphere").html();
                 trim_val = org_val.replace("+", "");
@@ -107,6 +139,12 @@ $(document).keydown(function(event) {
                     "phorEyeActive " + curEye + "Sphere"
                 );
                 $(elems).html(numeral(curPow).format("+0.00"));
+                if (curEye == "od") {
+                    dataToSend = ["RS" + numeral(curPow).format("+00.00")];
+                } else {
+                    dataToSend = ["LS" + numeral(curPow).format("+00.00")];
+                }
+                sendData(dataToSend);
             }
         }
         // end plus or minus sphere
@@ -132,6 +170,9 @@ $(document).keydown(function(event) {
                         "phorEyeActive " + curEye + "Sphere"
                     );
                     $(elems).html(numeral(curSph).format("+0.00"));
+
+                    dataToSend = ["RS" + numeral(curSph).format("+00.00")];
+                    sendData(dataToSend);
                 }
             } else if (curEye == "os") {
                 if (Math.abs(sphEqOS - curPow) >= 0.5) {
@@ -147,6 +188,8 @@ $(document).keydown(function(event) {
                         "phorEyeActive " + curEye + "Sphere"
                     );
                     $(elems).html(numeral(curSph).format("+0.00"));
+                    dataToSend = ["LS" + numeral(curSph).format("+00.00")];
+                    sendData(dataToSend);
                 }
             }
             //end calculate spherical equivalent
@@ -157,6 +200,12 @@ $(document).keydown(function(event) {
                 "phorEyeActive " + curEye + "Cyl"
             );
             $(elems).html(numeral(curPow).format("+0.00"));
+            if (curEye == "od") {
+                dataToSend = ["RC" + numeral(curPow).format("+00.00")];
+            } else {
+                dataToSend = ["LC" + numeral(curPow).format("+00.00")];
+            }
+            sendData(dataToSend);
         }
         if (event.which == 102) {
             curPow = parseFloat(
@@ -180,6 +229,8 @@ $(document).keydown(function(event) {
                         "phorEyeActive " + curEye + "Sphere"
                     );
                     $(elems).html(numeral(curSph).format("+0.00"));
+                    dataToSend = ["RS" + numeral(curSph).format("+00.00")];
+                    sendData(dataToSend);
                 }
             } else if (curEye == "os") {
                 if (Math.abs(sphEqOS - curPow) >= 0.5) {
@@ -195,6 +246,8 @@ $(document).keydown(function(event) {
                         "phorEyeActive " + curEye + "Sphere"
                     );
                     $(elems).html(numeral(curSph).format("+0.00"));
+                    dataToSend = ["LS" + numeral(curSph).format("+00.00")];
+                    sendData(dataToSend);
                 }
             }
             //end calculate spherical equivalent
@@ -205,6 +258,12 @@ $(document).keydown(function(event) {
                 "phorEyeActive " + curEye + "Cyl"
             );
             $(elems).html(numeral(curPow).format("+0.00"));
+            if (curEye == "od") {
+                dataToSend = ["RC" + numeral(curPow).format("+00.00")];
+            } else {
+                dataToSend = ["LC" + numeral(curPow).format("+00.00")];
+            }
+            sendData(dataToSend);
         }
         // end plus or minus cyl
 
@@ -223,6 +282,29 @@ $(document).keydown(function(event) {
                 "phorEyeActive " + curEye + "Axis"
             );
             $(elems).html(numeral(curPow).format("000"));
+            if (curEye == "od") {
+                dataToSend = ["RA" + numeral(curPow).format("000")];
+            } else {
+                dataToSend = ["LA" + numeral(curPow).format("000")];
+            }
+            if (curEye == "od") {
+                $("#jccOD").css({
+                    transform:
+                        "rotate(" +
+                        (getRotationAngle(document.getElementById("jccOD")) +
+                            axisChangeAmount) +
+                        "deg)"
+                });
+            } else if (curEye == "os") {
+                $("#jccOS").css({
+                    transform:
+                        "rotate(" +
+                        (getRotationAngle(document.getElementById("jccOS")) +
+                            axisChangeAmount) +
+                        "deg)"
+                });
+            }
+            sendData(dataToSend);
         }
         if (event.which == 99) {
             curPow = parseFloat(
@@ -237,6 +319,29 @@ $(document).keydown(function(event) {
                 "phorEyeActive " + curEye + "Axis"
             );
             $(elems).html(numeral(curPow).format("000"));
+            if (curEye == "od") {
+                dataToSend = ["RA" + numeral(curPow).format("000")];
+            } else {
+                dataToSend = ["LA" + numeral(curPow).format("000")];
+            }
+            if (curEye == "od") {
+                $("#jccOD").css({
+                    transform:
+                        "rotate(" +
+                        (getRotationAngle(document.getElementById("jccOD")) -
+                            axisChangeAmount) +
+                        "deg)"
+                });
+            } else if (curEye == "os") {
+                $("#jccOS").css({
+                    transform:
+                        "rotate(" +
+                        (getRotationAngle(document.getElementById("jccOS")) -
+                            axisChangeAmount) +
+                        "deg)"
+                });
+            }
+            sendData(dataToSend);
         }
         // end plus or minus axis
 
@@ -248,6 +353,11 @@ $(document).keydown(function(event) {
             $(".ref-data-active .osAdd").html(numeral(curPow).format("+0.00"));
             $(phorButtons[12]).html(numeral(curPow).format("+0.00"));
             $(phorButtons[14]).html(numeral(curPow).format("+0.00"));
+            dataToSend = [
+                "RD" + numeral(curPow).format("+00.00"),
+                "LD" + numeral(curPow).format("+00.00")
+            ];
+            sendData(dataToSend);
         }
         if (event.which == 107) {
             curPow = parseFloat($(phorButtons[14]).html());
@@ -256,50 +366,229 @@ $(document).keydown(function(event) {
             $(".ref-data-active .osAdd").html(numeral(curPow).format("+0.00"));
             $(phorButtons[12]).html(numeral(curPow).format("+0.00"));
             $(phorButtons[14]).html(numeral(curPow).format("+0.00"));
+            dataToSend = [
+                "RD" + numeral(curPow).format("+00.00"),
+                "LD" + numeral(curPow).format("+00.00")
+            ];
+            sendData(dataToSend);
         }
         // end plus or minus add
 
-        if (event.which == 111) {
+        if (event.which == 46) {
+            event.preventDefault();
             curEye = "od";
             $("*").removeClass("phorEyeActive");
             $(".odButtons").addClass("phorEyeActive");
+            $("#jccOS").css("visibility", "hidden");
+            $("#jccOSText").html("");
+            $("*").removeClass("cross-cylinder-select");
+            jccMode = 0;
+            dataToSend = ["RX00", "LX01", "KSR"];
+            sendData(dataToSend);
+            // setTimeout(sendData(["XC0"]), 250);
         }
-        if (event.which == 106) {
+        if (event.which == 34) {
+            event.preventDefault();
             curEye = "os";
             $("*").removeClass("phorEyeActive");
             $(".osButtons").addClass("phorEyeActive");
+            $("#jccOD").css("visibility", "hidden");
+            $("#jccODText").html("");
+            $("*").removeClass("cross-cylinder-select");
+            jccMode = 0;
+            dataToSend = ["RX01", "LX00", "KSL"];
+            sendData(dataToSend);
+            // setTimeout(sendData(["XC0"]), 250);
         }
-        if (event.which == 101) {
+        if (event.which == 35) {
+            event.preventDefault();
             curEye = "ou";
             $("*").removeClass("phorEyeActive");
             $([phorButtons[1], phorButtons[3], phorButtons[5]]).addClass(
                 "phorEyeActive"
             );
-        }
-        if (event.which == 34) {
-            dist = "near";
-        }
-        if (event.which == 33) {
-            dist = "far";
-        }
-        if ($("#subjRx").hasClass("ref-data-active")) {
-            createSubjectiveDataArray();
-        } else if ($("#finRx").hasClass("ref-data-active")) {
-            createFinalDataArray();
+            $("#jccOS, #jccOD").css("visibility", "hidden");
+            $("*").removeClass("cross-cylinder-select");
+            jccMode = 0;
+            dataToSend = ["RX00", "LX00", "KSB"];
+            sendData(dataToSend);
+            // setTimeout(sendData(["XC0"]), 250);
         }
 
+        // jcc controls
+        if (event.which == 101) {
+            //5
+            //toggle jcc on correct eye
+            var jccCurStat = jccStatus == 1 ? "XC1" : (jccCurStat = "XC2");
+
+            jccMode++;
+            if (jccMode == 1) {
+                $("#circles").trigger("click");
+                $("#cylRow").removeClass("cross-cylinder-select");
+                $("#axisRow").addClass("cross-cylinder-select");
+                if (curEye == "od") {
+                    $("#jccOD").css({
+                        transform:
+                            "rotate(-" +
+                            (parseFloat(
+                                $(".ref-data-active ." + curEye + "Axis").html()
+                            ) +
+                                45) +
+                            "deg)",
+                        visibility: "visible"
+                    });
+                    $("#jccODText").html(
+                        jccStatus == 1 ? "Choice 1 (+)" : "Choice 2 (-)"
+                    );
+                    sendData(["KAR", jccCurStat, "XM2"]);
+                    // $("#jccOD").css("visibility", "visible");
+                } else if (curEye == "os") {
+                    $("#jccOS").css({
+                        transform:
+                            "rotate(" +
+                            parseFloat(
+                                $(".ref-data-active ." + curEye + "Axis").html()
+                            ) +
+                            "deg)",
+                        visibility: "visible"
+                    });
+                    $("#jccOSText").html(
+                        jccStatus == 1 ? "Choice 1 (+)" : "Choice 2 (-)"
+                    );
+                    sendData(["KAL", jccCurStat, "XM2"]);
+                    // $("#jccOS").css("visibility", "visible");
+                }
+            } else if (jccMode == 2) {
+                $("#axisRow").removeClass("cross-cylinder-select");
+                $("#cylRow").addClass("cross-cylinder-select");
+                if (curEye == "od") {
+                    $("#jccOD").css({
+                        transform:
+                            "rotate(" +
+                            (getRotationAngle(
+                                document.getElementById("jccOD")
+                            ) +
+                                45) +
+                            "deg)"
+                    });
+                    $("#jccOD").css("visibility", "visible");
+                    $("#jccODText").html(
+                        jccStatus == 1 ? "Choice 1 (+)" : "Choice 2 (-)"
+                    );
+                    sendData(["KCR", jccCurStat]);
+                } else if (curEye == "os") {
+                    $("#jccOS").css({
+                        transform:
+                            "rotate(" +
+                            (getRotationAngle(
+                                document.getElementById("jccOS")
+                            ) -
+                                45) +
+                            "deg)"
+                    });
+                    $("#jccOS").css("visibility", "visible");
+                    $("#jccOSText").html(
+                        jccStatus == 1 ? "Choice 1 (+)" : "Choice 2 (-)"
+                    );
+                    sendData(["KCL", jccCurStat]);
+                }
+            } else {
+                jccMode = 0;
+                $("#cylRow").removeClass("cross-cylinder-select");
+                $("#axisRow").removeClass("cross-cylinder-select");
+                $("#jccOD").css("visibility", "hidden");
+                $("#jccOS").css("visibility", "hidden");
+                $("#singleLetter").trigger("click");
+                $("#jccODText").html("");
+                $("#jccOSText").html("");
+                setTimeout(() => $("#twentyFive").trigger("click"), 200);
+                sendData(["XC0"]);
+            }
+        }
+
+        if (event.which == 104) {
+            // key 8
+            if (jccMode == 1) {
+                curAxis = curEye == "od" ? (axisOD += 45) : (axisOS += 45);
+            } else {
+                curAxis = curEye == "od" ? axisOD : axisOS;
+            }
+            jccStatus == 1 ? (jccStatus = 2) : (jccStatus = 1);
+
+            if (jccStatus == 1) {
+                if (curEye == "od") {
+                    $("#jccOD").css({
+                        transform: `rotate(${getRotationAngle(
+                            document.getElementById("jccOD")
+                        ) + 90}deg)`
+                    });
+                    $("#jccODText").html("Choice 1 (+)");
+                    sendData(["XC1"]);
+                } else {
+                    $("#jccOS").css({
+                        transform: `rotate(${getRotationAngle(
+                            document.getElementById("jccOS")
+                        ) + 90}deg)`
+                    });
+                    $("#jccOSText").html("Choice 1 (+)");
+                    sendData(["XC1"]);
+                }
+            } else if (jccStatus == 2) {
+                if (curEye == "od") {
+                    $("#jccOD").css({
+                        transform: `rotate(${getRotationAngle(
+                            document.getElementById("jccOD")
+                        ) - 90}deg)`
+                    });
+                    $("#jccODText").html("Choice 2 (-)");
+                    sendData(["XC2"]);
+                } else {
+                    $("#jccOS").css({
+                        transform: `rotate(${getRotationAngle(
+                            document.getElementById("jccOS")
+                        ) - 90}deg)`
+                    });
+                    $("#jccOSText").html("Choice 2 (-)");
+                    sendData(["XC2"]);
+                }
+            }
+        }
+
+        // end jcc controls
+
         if (event.which == 13) {
-            $("#finRxp").html("");
-            // console.log(finalData);
-            $("#finRxp").html(`
-        <p><span class="odSphere">${subjectiveData[1]}</span><span class="odCyl"> ${subjectiveData[3]}</span> x <span class="odAxis">${subjectiveData[5]}</span> <span style="color: lightsteelblue; float:right" id="odDistVisionFinal"></span></p>
-        <p><span class="osSphere">${subjectiveData[2]}</span><span class="osCyl"> ${subjectiveData[4]}</span> x <span class="osAxis">${subjectiveData[6]}</span> <span style="color: lightsteelblue; float: right" id="osDistVisionFinal"></span></p>
+            finalPush++;
+            if (finalPush == 1) {
+                $("#finRxp").html("");
+                // console.log(finalData);
+                $("#finRxp").html(`
+        <p><span class="odSphere">${$(
+            "#subjOdSph"
+        ).html()}</span><span class="odCyl"> ${$(
+                    "#subjOdCyl"
+                ).html()}</span> x <span class="odAxis">${$(
+                    "#subjOdAxis"
+                ).html()}</span> <span style="color: lightsteelblue; float:right" id="odDistVisionFinal"></span></p>
+        <p><span class="osSphere">${$(
+            "#subjOsSph"
+        ).html()}</span><span class="osCyl"> ${$(
+                    "#subjOsCyl"
+                ).html()}</span> x <span class="osAxis">${$(
+                    "#subjOsAxis"
+                ).html()}</span> <span style="color: lightsteelblue; float: right" id="osDistVisionFinal"></span></p>
         <p><span style="color: lightsteelblue; float: right" id="ouDistVisionFinal"></span></p><br />
-        <p><span style="color: lightsteelblue; float: left">Add: <span class="osAdd">${subjectiveData[8]}</span></p>
+        <p><span style="color: lightsteelblue; float: left">Add: <span class="osAdd">${$(
+            "#subjOsAdd"
+        ).html()}</span></p>
         `);
-            finalData = [...subjectiveData];
+                // finalData = []
+                $("#finRx").trigger("click");
+            } else {
+                finalSend();
+            }
         }
     }
+    buildStaticArrays();
 });
 
 $(document).keyup(function(event) {
@@ -311,58 +600,58 @@ $(document).keyup(function(event) {
 
 $(document).ready(function() {
     $(".odButtons").addClass("phorEyeActive");
+    buildStaticArrays();
     createSubjectiveDataArray();
     sphEqOD = parseFloat($(phorButtons[6]).html());
     sphEqOS = parseFloat($(phorButtons[8]).html());
+    axisOD = parseFloat($(phorButtons[9]).html());
+    axisOS = parseFloat($(phorButtons[11]).html());
+    sendData(["RX00", "LX01"]);
 });
 
 $(".ref-data").click(function(d) {
     rx = $(this).attr("id");
     if (rx == "subjRx") {
-        $(phorButtons[3]).html(subjectiveData[1]);
-        $(phorButtons[6]).html(subjectiveData[3]);
-        $(phorButtons[9]).html(subjectiveData[5]);
-        $(phorButtons[12]).html(subjectiveData[7]);
-        $(phorButtons[5]).html(subjectiveData[2]);
-        $(phorButtons[8]).html(subjectiveData[4]);
-        $(phorButtons[11]).html(subjectiveData[6]);
-        $(phorButtons[14]).html(subjectiveData[8]);
+        $(phorButtons[3]).html(staticSubjective[0]);
+        $(phorButtons[6]).html(staticSubjective[2]);
+        $(phorButtons[9]).html(staticSubjective[4]);
+        $(phorButtons[12]).html(staticSubjective[6]);
+        $(phorButtons[5]).html(staticSubjective[1]);
+        $(phorButtons[8]).html(staticSubjective[3]);
+        $(phorButtons[11]).html(staticSubjective[5]);
+        $(phorButtons[14]).html(staticSubjective[7]);
         createSubjectiveDataArray();
     }
     if (rx == "arRx") {
-        $(phorButtons[3]).html(arData[0]);
-        $(phorButtons[6]).html(arData[1]);
-        $(phorButtons[9]).html(arData[2]);
-        $(phorButtons[5]).html(arData[3]);
-        $(phorButtons[8]).html(arData[4]);
-        $(phorButtons[11]).html(arData[5]);
-        arCopy = [...arData];
-        arCopy.unshift(curEye);
-        sendData(arCopy, "arRx");
+        $(phorButtons[3]).html(arData[0].substring(2));
+        $(phorButtons[6]).html(arData[2].substring(2));
+        $(phorButtons[9]).html(arData[4].substring(2));
+        $(phorButtons[5]).html(arData[1].substring(2));
+        $(phorButtons[8]).html(arData[3].substring(2));
+        $(phorButtons[11]).html(arData[5].substring(2));
+        sendData(arData);
     }
     if (rx == "specRx") {
-        $(phorButtons[3]).html(specData[0]);
-        $(phorButtons[6]).html(specData[1]);
-        $(phorButtons[9]).html(specData[2]);
-        $(phorButtons[12]).html(specData[3]);
-        $(phorButtons[5]).html(specData[4]);
-        $(phorButtons[8]).html(specData[5]);
-        $(phorButtons[11]).html(specData[6]);
-        $(phorButtons[14]).html(specData[7]);
-        specCopy = [...specData];
-        specCopy.unshift(curEye);
-        sendData(specCopy, "specRx");
+        $(phorButtons[3]).html(specData[0].substring(2));
+        $(phorButtons[6]).html(specData[2].substring(2));
+        $(phorButtons[9]).html(specData[4].substring(2));
+        $(phorButtons[12]).html(specData[6].substring(2));
+        $(phorButtons[5]).html(specData[1].substring(2));
+        $(phorButtons[8]).html(specData[3].substring(2));
+        $(phorButtons[11]).html(specData[5].substring(2));
+        $(phorButtons[14]).html(specData[7].substring(2));
+        sendData(specData);
     }
 
     if (rx == "finRx") {
-        $(phorButtons[3]).html(finalData[1]);
-        $(phorButtons[6]).html(finalData[3]);
-        $(phorButtons[9]).html(finalData[5]);
-        $(phorButtons[12]).html(finalData[7]);
-        $(phorButtons[5]).html(finalData[2]);
-        $(phorButtons[8]).html(finalData[4]);
-        $(phorButtons[11]).html(finalData[6]);
-        $(phorButtons[14]).html(finalData[8]);
+        $(phorButtons[3]).html(staticFinal[0]);
+        $(phorButtons[6]).html(staticFinal[2]);
+        $(phorButtons[9]).html(staticFinal[4]);
+        $(phorButtons[12]).html(staticFinal[6]);
+        $(phorButtons[5]).html(staticFinal[1]);
+        $(phorButtons[8]).html(staticFinal[3]);
+        $(phorButtons[11]).html(staticFinal[5]);
+        $(phorButtons[14]).html(staticFinal[7]);
         createFinalDataArray();
     }
 
@@ -380,41 +669,187 @@ $("#plano_button").click(function() {
     $(phorButtons[8]).html(plano[1]);
     $(phorButtons[11]).html(plano[2]);
     $(phorButtons[14]).html(subjectiveData[8]);
-    sendData(plano, "plano");
+    sendData(planoWithPref);
 });
 
 function createSubjectiveDataArray() {
     subjectiveData = [];
     $(".phorButton").each(function(e) {
         if (e > 2 && e != 4 && e != 7 && e != 10 && e != 13) {
-            subjectiveData.push($(this).html());
+            if (e != 9 && e != 11) {
+                subjectiveData.push(
+                    $(this).data("prefix") +
+                        numeral($(this).html()).format("+00.00")
+                );
+            } else {
+                subjectiveData.push(
+                    $(this).data("prefix") +
+                        numeral($(this).html()).format("000")
+                );
+            }
         }
     });
-    subjectiveData.unshift(curEye);
-    subjectiveData[subjectiveData.length] = dist;
-    sendData(subjectiveData, "subj");
+    // subjectiveData.unshift(curEye);
+    // subjectiveData[subjectiveData.length] = dist;
+    // subjectiveData.push("XC0");
+    sendData(subjectiveData);
 }
 
 function createFinalDataArray() {
     finalData = [];
     $(".phorButton").each(function(e) {
         if (e > 2 && e != 4 && e != 7 && e != 10 && e != 13) {
-            finalData.push($(this).html());
+            if (e != 9 && e != 11) {
+                finalData.push(
+                    $(this).data("prefix") +
+                        numeral($(this).html()).format("+00.00")
+                );
+            } else {
+                finalData.push(
+                    $(this).data("prefix") +
+                        numeral($(this).html()).format("000")
+                );
+            }
         }
     });
-    finalData.unshift(curEye);
-    sendData(finalData, "fin");
+    // finalData.unshift(curEye);
+    finalData.push("XC0");
+    sendData(finalData);
 }
 
-function sendData(data, ar) {
+function buildStaticArrays() {
+    if ($("#subjRx").hasClass("ref-data-active")) {
+        staticSubjective = [];
+        $(".phorButton").each(function(e) {
+            if (e > 2 && e != 4 && e != 7 && e != 10 && e != 13) {
+                staticSubjective.push($(this).html());
+            }
+        });
+    } else if ($("#finRx").hasClass("ref-data-active")) {
+        staticFinal = [];
+        $(".phorButton").each(function(e) {
+            if (e > 2 && e != 4 && e != 7 && e != 10 && e != 13) {
+                staticFinal.push($(this).html());
+            }
+        });
+    }
+}
+
+function sendData(data) {
     console.log(data);
     $.ajax({
         url: "/phoropter-sequence",
         type: "post",
         data: {
             refractive_info: data,
-            ri_type: ar,
             location: refInfo.store_location_id
         }
+    });
+}
+
+function getRotationAngle(target) {
+    const obj = window.getComputedStyle(target, null);
+    const matrix =
+        obj.getPropertyValue("-webkit-transform") ||
+        obj.getPropertyValue("-moz-transform") ||
+        obj.getPropertyValue("-ms-transform") ||
+        obj.getPropertyValue("-o-transform") ||
+        obj.getPropertyValue("transform");
+
+    let angle = 0;
+
+    if (matrix !== "none") {
+        const values = matrix
+            .split("(")[1]
+            .split(")")[0]
+            .split(",");
+        const a = values[0];
+        const b = values[1];
+        angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+    }
+
+    return angle < 0 ? (angle += 360) : angle;
+}
+
+function finalSend() {
+    emrArray = [];
+    emrArray[0] = refInfo.ar01 == null ? "\t\t" : refInfo.ar01 + "\t";
+    emrArray[1] = refInfo.la01 == null ? "\t\t" : refInfo.la01 + "\t";
+    emrArray[2] = refInfo.la02 == null ? "\t\t" : refInfo.la02 + "\t";
+    emrArray[3] = refInfo.la03 == null ? "\t\t" : refInfo.la03 + "\t";
+    emrArray[4] = refInfo.la04 == null ? "\t\t" : refInfo.la04 + "\t";
+    emrArray[5] = refInfo.la05 == null ? "\t\t" : refInfo.la05 + "\t";
+    emrArray[6] = refInfo.la06 == null ? "\t\t" : refInfo.la06 + "\t";
+    emrArray[7] = refInfo.la07 == null ? "\t\t" : refInfo.la07 + "\t";
+    emrArray[8] = refInfo.la08 == null ? "\t\t" : refInfo.la08 + "\t";
+    emrArray[9] = refInfo.ar02 == null ? "\t\t" : refInfo.ar02 + "\t";
+    emrArray[10] = refInfo.ar03 == null ? "\t\t" : refInfo.ar03 + "\t";
+    emrArray[11] = refInfo.ar04 == null ? "\t\t" : refInfo.ar04 + "\t";
+    emrArray[12] = refInfo.ar05 == null ? "\t\t" : refInfo.ar05 + "\t";
+    emrArray[13] = refInfo.ar06 == null ? "\t\t" : refInfo.ar06 + "\t";
+    emrArray[14] = refInfo.ar07 == null ? "\t\t" : refInfo.ar07 + "\t";
+
+    emrArray[15] =
+        staticSubjective[0] == null ? "\t\t" : staticSubjective[0] + "\t";
+    emrArray[16] =
+        staticSubjective[2] == null ? "\t\t" : staticSubjective[2] + "\t";
+    emrArray[17] =
+        staticSubjective[4] == null ? "\t\t" : staticSubjective[4] + "\t";
+    emrArray[18] =
+        staticSubjective[6] == null ? "\t\t" : staticSubjective[6] + "\t";
+    emrArray[19] =
+        staticSubjective[1] == null ? "\t\t" : staticSubjective[1] + "\t";
+    emrArray[20] =
+        staticSubjective[3] == null ? "\t\t" : staticSubjective[3] + "\t";
+    emrArray[21] =
+        staticSubjective[5] == null ? "\t\t" : staticSubjective[5] + "\t";
+    emrArray[22] =
+        staticSubjective[7] == null ? "\t\t" : staticSubjective[7] + "\t";
+    emrArray[23] =
+        $("#odDistVisionSubj")
+            .html()
+            .substring(3) + "\t";
+    emrArray[24] = $("#osDistVisionSubj")
+        .html()
+        .substring(3);
+    emrArray[25] = staticFinal[0] == null ? "\t\t" : staticFinal[0] + "\t";
+    emrArray[26] = staticFinal[2] == null ? "\t\t" : staticFinal[2] + "\t";
+    emrArray[27] = staticFinal[4] == null ? "\t\t" : staticFinal[4] + "\t";
+    emrArray[28] = staticFinal[6] == null ? "\t\t" : staticFinal[6] + "\t";
+    emrArray[29] = staticFinal[1] == null ? "\t\t" : staticFinal[1] + "\t";
+    emrArray[30] = staticFinal[3] == null ? "\t\t" : staticFinal[3] + "\t";
+    emrArray[31] = staticFinal[5] == null ? "\t\t" : staticFinal[5] + "\t";
+    emrArray[32] = staticFinal[7] == null ? "\t\t" : staticFinal[7] + "\t";
+    emrArray[33] =
+        $("#odDistVisionFinal")
+            .html()
+            .substring(3) + "\t";
+    emrArray[34] = $("#odDistVisionFinal")
+        .html()
+        .substring(3);
+
+    emrArray[35] = refInfo.ar08 == null ? "\t\t" : refInfo.ar08 + "\t";
+    emrArray[36] = refInfo.ar09 == null ? "\t\t" : refInfo.ar09 + "\t";
+    emrArray[37] = refInfo.ar10 == null ? "\t\t" : refInfo.ar10 + "\t";
+    emrArray[38] = refInfo.ar11 == null ? "\t\t" : refInfo.ar11 + "\t";
+    emrArray[39] = refInfo.ar12 == null ? "\t\t" : refInfo.ar12 + "\t";
+    emrArray[40] = refInfo.ar13 == null ? "\t\t" : refInfo.ar13 + "\t";
+    emrArray[41] = refInfo.ar14 == null ? "\t\t" : refInfo.ar14 + "\t";
+    emrArray[42] = refInfo.ar15 == null ? "\t\t" : refInfo.ar15 + "\t";
+    emrArray[43] = "*!";
+
+    $.ajax({
+        url: "/final-send",
+        type: "post",
+        data: {
+            finalInfo: emrArray,
+            encounter: refInfo.pt_id,
+            location: refInfo.store_location_id
+        },
+        success: data => {
+            alert("Successfully submitted.");
+            window.location.href = "/tech-home";
+        },
+        error: data => alert("Could not submit")
     });
 }

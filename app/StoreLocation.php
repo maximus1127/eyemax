@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class StoreLocation extends Model
 {
+    protected $fillable = ['screen_calibration'];
     public function storeInstrument(){
       return $this->hasMany(StoreInstrument::class);
     }
@@ -17,5 +18,8 @@ class StoreLocation extends Model
     }
     public function unassignedLensometer(){
       return $this->hasMany(UnassignedLensometer::class);
+    }
+    public function user(){
+      return $this->hasMany(User::class);
     }
 }
