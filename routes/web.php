@@ -31,6 +31,7 @@ Route::get('/truvision/{encounter}', 'EncounterController@truvision')->name('tru
 Route::get("/admin-panel", "HomeController@admin");
 Route::post('/add-location', 'StoreLocationController@store');
 Route::post('/add-user', 'StoreLocationController@addUser');
+Route::post('/add-instrument', 'InstrumentController@store');
 Route::get('/delete-user/{user}', 'StoreLocationController@deleteUser');
 Route::post('/encounter-complete', 'EncounterController@complete');
 

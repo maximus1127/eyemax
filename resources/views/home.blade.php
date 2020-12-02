@@ -21,9 +21,10 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-          @foreach($ins as $in)
+          {{-- @foreach($ins as $in)
             <div class="btn btn-danger" onclick="serialConnect({{$in->id}}, this)" id="ins-button">{{$in->instrument->name}}</div>
-          @endforeach
+          @endforeach --}}
+            <div class="btn btn-danger" onclick="serialConnect({{$ins->id}}, this)" id="ins-button">{{$ins->meta_name}}</div>
           <br /><br />
             <div class="card">
                 <div class="card-header">{{ __('Dashboard') }}</div>
@@ -98,7 +99,7 @@
 @endsection
 
 @section('footer-scripts')
-  
+
   <script src="{{asset('/js/marco_modal_functions.js')}}"></script>
   <script src="{{asset('/js/download.js')}}"> </script>
   <script src="{{asset('/js/serialclass.js')}}"> </script>
@@ -118,7 +119,7 @@
         localStorage.setItem('location', loc);
       }
 
-        // chart = window.open("/patient-chart","PatientChart", "width=300, height=300, toolbar = 0, status=0,");
+        chart = window.open("/patient-chart","PatientChart", "width=300, height=300, toolbar = 0, status=0,");
     })
 
 

@@ -8,6 +8,7 @@ use App\Encounter;
 use Auth;
 use App\StoreLocation;
 use App\User;
+use App\Instrument;
 
 class HomeController extends Controller
 {
@@ -28,7 +29,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $ins = StoreInstrument::where('store_location_id', Auth::user()->store_location_id)->get();
+        // $ins = Instrument::where('id', Auth::user()->store_location_id->instrument)->get();
+        $ins = Auth::user()->storeLocation->instrument;
 
         return view('home', compact('ins'));
     }
@@ -42,7 +44,8 @@ class HomeController extends Controller
     public function admin(){
       $stores = StoreLocation::all();
       $techs = User::all();
-      return view('admin-home', compact('stores', 'techs'));
+      $instruments = Instrument::all();
+      return view('admin-home', compact('stores', 'techs', 'instruments'));
     }
 
 }

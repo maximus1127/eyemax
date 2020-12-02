@@ -43,15 +43,18 @@ class StoreLocationController extends Controller
         $store->street = $request->street;
         $store->city = $request->city;
         $store->state = $request->state;
+        $store->instrument_id = $request->phor;
         $store->save();
     }
 
     public function addUser(Request $request)
     {
+        $store = StoreLocation::where('store_number', $request->store)->first();
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->store_location_id = $request->store;
+        $user->store_location_id = $store->id;
+        $user->role= $request->position;
         $user->password = Hash::make($request->password);
         $user->save();
     }

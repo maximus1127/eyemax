@@ -16,12 +16,23 @@ class RedirectIfAuthenticated
      * @param  string|null  $guard
      * @return mixed
      */
-    public function handle($request, Closure $next, $guard = null)
-    {
-        if (Auth::guard($guard)->check()) {
-            return redirect(RouteServiceProvider::HOME);
-        }
+     public function handle($request, Closure $next, $guard = null) {
+       if (Auth::guard($guard)->check()) {
+         $role = Auth::user()->role;
 
-        return $next($request);
-    }
+         switch ($role) {
+           case 'onsite-tech':
+              return redirect('/home');
+              break;
+           case 'remote-tech':
+              return redirect('/tech-home');
+              break;
+
+           default:
+              return redirect('/home');
+              break;
+         }
+       }
+       return $next($request);
+     }
 }

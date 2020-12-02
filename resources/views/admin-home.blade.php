@@ -7,6 +7,9 @@
 <div class="container">
   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#locationModal">Add Location</button>
   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#userModal">Add User</button>
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#instrumentModal">Add Instrument</button>
+
+
   <h3>Locations</h3>
   <table class="table table-striped">
     <thead>
@@ -15,7 +18,7 @@
         <th scope="col">Number</th>
         <th scope="col">Address</th>
         <th scope="col">Calibration</th>
-        <th></th>
+        <th>Phoropter</th>
       </tr>
     </thead>
     <tbody>
@@ -25,6 +28,7 @@
         <td>{{$e->store_number}}</td>
         <td>{{$e->street}}<br />{{$e->city.', '.$e->state}}</td>
         <td>{{$e->screen_calibration}}</td>
+        <td>{{$e->instrument->name}}</td>
       </tr>
 @endforeach
     </tbody>
@@ -54,6 +58,25 @@
 @endforeach
     </tbody>
   </table>
+  <br /><br />
+      <h3>Instruments</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Serial Name</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach($instruments as $e)
+        <tr>
+          <th scope="row">{{$e->name}}</th>
+          <td>{{$e->meta_name}}</td>
+        </tr>
+  @endforeach
+      </tbody>
+    </table>
 </div>
 
 
@@ -91,6 +114,14 @@
             <label for="state">Location State</label>
             <input type="text" class="form-control" id="state" >
           </div>
+          <div class="form-group">
+            <label for="state">Phoropter Model</label>
+            <select  name="phor" id="phor">
+              @foreach($instruments as $in)
+                <option value="{{$in->id}}">{{$in->name}}</option>
+              @endforeach
+            </select>
+          </div>
 
         </form>
       </div>
@@ -123,8 +154,21 @@
             <input type="email" class="form-control" id="userEmail" >
           </div>
           <div class="form-group">
-            <label for="store">Store</label>
-            <input type="text" class="form-control" id="store" >
+            <label for="store">Store Location</label>
+            <select id="store">
+              @foreach($stores as $s)
+                <option value="{{$s->id}}">{{$s->name}}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="store">User Role</label>
+            <select id="userRole">
+
+                <option value="onsite-tech">Onsite Tech</option>
+                <option value="remote-tech">Remote Tech</option>
+
+            </select>
           </div>
           <div class="form-group">
             <label for="password">Password</label>
@@ -135,6 +179,35 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" onclick="saveUser()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="instrumentModal" tabindex="-1" role="dialog" aria-labelledby="instrumentModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="instrumentModalLabel">Add Instrument</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="userName">Model Name</label>
+            <input type="text" class="form-control" id="modelName" >
+          </div>
+          <div class="form-group">
+            <label for="userEmail">Serial Name</label>
+            <input type="email" class="form-control" id="meta_name" >
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="saveInstrument()">Save</button>
       </div>
     </div>
   </div>
@@ -158,7 +231,8 @@ $.ajaxSetup({
         number: $('#locationNumber').val(),
         street: $('#street').val(),
         city: $('#city').val(),
-        state: $("#state").val()
+        state: $("#state").val(),
+        phor: $("#phor").val()
       },
       success: data => location.reload(),
       error: data => alert('Could not save')
@@ -174,11 +248,24 @@ $.ajaxSetup({
         email: $('#userEmail').val(),
         store: $('#store').val(),
         password: $('#password').val(),
+        position: $('userRole').val()
       },
       success: data => location.reload(),
       error: data => alert('Could not save')
     })
   }
+    function saveInstrument(){
+      $.ajax({
+        url: '/add-instrument',
+        type: 'post',
+        data: {
+          name: $("#modelName").val(),
+          meta_name: $('#meta_name').val()
+        },
+        success: data => location.reload(),
+        error: data => alert('Could not save')
+      })
+    }
 
 
 

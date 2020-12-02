@@ -43,7 +43,10 @@ class InstrumentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $in = new Instrument();
+        $in->name = $request->name;
+        $in->meta_name = $request->meta_name;
+        $in->save();
     }
 
     /**

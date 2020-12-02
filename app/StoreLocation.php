@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class StoreLocation extends Model
 {
     protected $fillable = ['screen_calibration'];
-    public function storeInstrument(){
-      return $this->hasMany(StoreInstrument::class);
+    public function instrument(){
+      return $this->belongsTo(Instrument::class);
     }
     public function encounter(){
       return $this->hasMany(Encounter::class);
