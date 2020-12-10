@@ -15,7 +15,7 @@ Echo.channel(localStorage.getItem("location").toString()).listen(
         console.log(data.refInfo);
         // console.log(converted_hex);
         // console.log(send_to_phor);
-        // serialDevices[1].write(decodeURIComponent(send_to_phor));
+        serialDevices[1].write(decodeURIComponent(send_to_phor));
     }
 );
 

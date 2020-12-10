@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\StoreLocation;
 use Auth;
 use App\UnassignedAutorefractor;
+use App\UnassignedLensometer;
+use App\Events\NewEncounter;
 use App\Events\AddEncounter;
 
 class EncounterController extends Controller
@@ -46,10 +48,14 @@ class EncounterController extends Controller
     public function store(Request $request)
     {
         $en = new Encounter();
-        $en->store_location_id = $request->location;
+        $store = StoreLocation::where('store_number', $request->location)->first();
+        $en->store_location_id = $store->id;
         $en->pt_id = $request->pt_id;
         $en->pt_name = $request->pt_name;
         $en->save();
+        $en = $en->fresh();
+        event(new NewEncounter($en->storeLocation->name, $request->pt_name, $request->pt_id, $en->created_at, $en->id));
+
     }
 
     public function getActive(Request $request)
@@ -88,7 +94,7 @@ class EncounterController extends Controller
      * @param  \App\Encounter  $encounter
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Encounter $encounter)
+    public function updateAR(Request $request, Encounter $encounter)
     {
         $en = Encounter::where('pt_id', $request->patient)->first();
         empty($request->ar['ar01'])? :$en->ar01 = str_replace(" ","", $request->ar['ar01']);
@@ -119,7 +125,33 @@ class EncounterController extends Controller
           $oldAr->complete = 1;
           $oldAr->save();
         }
-        $en->save();
+        if($en->save()){
+          return "good";
+        } else {
+          return "bad";
+        }
+    }
+    public function updateLM(Request $request, Encounter $encounter)
+    {
+        $en = Encounter::where('pt_id', $request->patient)->first();
+        empty($request->ar['la01'])? :$en->la01 = str_replace(" ","", $request->ar['la01']);
+        empty($request->ar['la02'])? :$en->la02 = str_replace(" ","", $request->ar['la02']);
+        empty($request->ar['la03'])? :$en->la03 = str_pad(str_replace(" ","", $request->ar['la03']), 3, "0", STR_PAD_LEFT);
+        empty($request->ar['la04'])? :$en->la04 = str_replace(" ","", $request->ar['la04']);
+        empty($request->ar['la05'])? :$en->la05 = str_replace(" ","", $request->ar['la05']);
+        empty($request->ar['la06'])? :$en->la06 = str_replace(" ","", $request->ar['la06']);
+        empty($request->ar['la07'])? :$en->la07 = str_pad(str_replace(" ","", $request->ar['la07']), 3, "0", STR_PAD_LEFT);
+        empty($request->ar['la08'])? :$en->la08 = str_replace(" ","", $request->ar['la08']);
+        $oldAr = UnassignedLensometer::find($request->ar['id']);
+        if($oldAr){
+          $oldAr->complete = 1;
+          $oldAr->save();
+        }
+        if($en->save()){
+          return "good";
+        } else {
+          return "bad";
+        }
     }
 
 

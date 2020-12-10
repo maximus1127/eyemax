@@ -10,7 +10,7 @@ class SerialLEDController {
                 const port = await navigator.serial.requestPort();
                 await port.open({
                     baudRate: 9600,
-                    parity: "odd",
+                    parity: "even",
                     dataBits: 8,
                     stopBits: 1
                 });

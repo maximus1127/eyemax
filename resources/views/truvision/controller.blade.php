@@ -227,7 +227,9 @@
 </div>
 
   <script src="{{asset("/js/app.js")}}"></script>
-  <script> var refInfo = {!! $en !!}; </script>
+  <script>
+    var refInfo = {!! $en !!};
+  </script>
   <script type="text/javascript" src="{{asset("/js/marco_phoropter.js")}}"></script>
   <script type="text/javascript" src="{{asset("/js/truvision_control_screen.js")}}"></script>
 

@@ -11,72 +11,13 @@
 
 
   <h3>Locations</h3>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col">Location</th>
-        <th scope="col">Number</th>
-        <th scope="col">Address</th>
-        <th scope="col">Calibration</th>
-        <th>Phoropter</th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach($stores as $e)
-      <tr>
-        <th scope="row">{{$e->name}}</th>
-        <td>{{$e->store_number}}</td>
-        <td>{{$e->street}}<br />{{$e->city.', '.$e->state}}</td>
-        <td>{{$e->screen_calibration}}</td>
-        <td>{{$e->instrument->name}}</td>
-      </tr>
-@endforeach
-    </tbody>
-
-
-  </table>
+  @livewire('locations')
 <br /><br />
     <h3>Users</h3>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Role</th>
-        <th scope="col">Store</th>
-
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach($techs as $e)
-      <tr>
-        <th scope="row">{{$e->name}}</th>
-        <td>{{$e->role}}</td>
-        <td>{{$e->storeLocation->name}}</td>
-        <td><a href="/delete-user/{{$e->id}}"><button class="btn-sm btn-danger">Delete</button></a></td>
-      </tr>
-@endforeach
-    </tbody>
-  </table>
+  @livewire('users')
   <br /><br />
       <h3>Instruments</h3>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Serial Name</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach($instruments as $e)
-        <tr>
-          <th scope="row">{{$e->name}}</th>
-          <td>{{$e->meta_name}}</td>
-        </tr>
-  @endforeach
-      </tbody>
-    </table>
+  @livewire('instruments')
 </div>
 
 

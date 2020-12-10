@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\UnassignedAutorefractor;
+use App\UnassignedLensometer;
 use Illuminate\Http\Request;
 use App\StoreLocation;
 use Orchestra\Parser\Xml\Facade as XmlParser;
@@ -65,18 +66,32 @@ class UnassignedAutorefractorController extends Controller
             'la08' => ['uses' => 'DataSet.Presenting_Data_OS.Add_OS'],
         ]);
 
-
+        if($ar["ar02"] == null && $ar["ar03"] == null && $ar["ar04"] == null && $ar["ar05"] == null && $ar["ar06"] == null && $ar["ar07"] == null && $ar["ar08"] == null && $ar["ar09"] == null && $ar["ar10"] == null && $ar["ar11"] == null && $ar["ar12"] == null && $ar["ar13"] == null && $ar["ar14"] == null && $ar["ar15"] == null){
+          $ul = new UnassignedLensometer();
+          $ul->la01 = $ar['la01'];
+          $ul->la02 = $ar['la02'];
+          $ul->la03 = $ar['la03'];
+          $ul->la04 = $ar['la04'];
+          $ul->la05 = $ar['la05'];
+          $ul->la06 = $ar['la06'];
+          $ul->la07 = $ar['la07'];
+          $ul->la08 = $ar['la08'];
+          $ul->store_location_id = $store->id;
+          if ($ul->save()) {
+              return response("200");
+          }
+        } else {
         $ua = new UnassignedAutorefractor();
         $ua->ar01 = $ar['ar01'];
-        $ua->ar02 = $ar['ar02'];
-        $ua->ar03 = $ar['ar03'];
-        $ua->ar04 = $ar['ar04'];
-        $ua->ar05 = $ar['ar05'];
-        $ua->ar06 = $ar['ar06'];
-        $ua->ar07 = $ar['ar07'];
+        $ua->ar02 = str_replace(" ", "", $ar['ar02']) == "" ? null : $ar['ar02'];
+        $ua->ar03 = str_replace(" ", "", $ar['ar03']) == "" ? null : $ar['ar03'];
+        $ua->ar04 = str_replace(" ", "", $ar['ar04']) == "" ? null : $ar['ar04'];
+        $ua->ar05 = str_replace(" ", "", $ar['ar05']) == "" ? null : $ar['ar05'];
+        $ua->ar06 = str_replace(" ", "", $ar['ar06']) == "" ? null : $ar['ar06'];
         $ua->ar08 = $ar['ar08'];
         $ua->ar09 = $ar['ar09'];
         $ua->ar10 = $ar['ar10'];
+        $ua->ar07 = str_replace(" ", "", $ar['ar07']) == "" ? null : $ar['ar07'];
         $ua->ar11 = $ar['ar11'];
         $ua->ar12 = $ar['ar12'];
         $ua->ar13 = $ar['ar13'];
@@ -95,6 +110,7 @@ class UnassignedAutorefractorController extends Controller
             return response("200");
         }
     }
+  }
 
     /**
      * Show the form for creating a new resource.

@@ -44,6 +44,7 @@ class StoreLocationController extends Controller
         $store->city = $request->city;
         $store->state = $request->state;
         $store->instrument_id = $request->phor;
+        $store->api_token = uniqid();
         $store->save();
     }
 
@@ -59,10 +60,7 @@ class StoreLocationController extends Controller
         $user->save();
     }
 
-    public function deleteUser(User $user){
-      $user->delete();
-      return redirect('/admin-panel');
-    }
+
 
     /**
      * Display the specified resource.

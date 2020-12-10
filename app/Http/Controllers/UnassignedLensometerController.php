@@ -6,6 +6,7 @@ use App\UnassignedLensometer;
 use Illuminate\Http\Request;
 use App\StoreLocation;
 
+
 class UnassignedLensometerController extends Controller
 {
     /**
@@ -34,6 +35,8 @@ class UnassignedLensometerController extends Controller
         //
     }
 
+
+
     /**
      * Store a newly created resource in storage.
      *
@@ -42,7 +45,7 @@ class UnassignedLensometerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**

@@ -21,10 +21,12 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/get-store-instrument', 'HomeController@getInstrument');
 Route::get('/get-active-encounters', 'EncounterController@getActive');
 Route::get('/get-unassigned-ar', 'UnassignedAutorefractorController@getAll');
 Route::get('/get-unassigned-lm', 'UnassignedLensometerController@getAll');
-Route::post('/assign-ar', 'EncounterController@update');
+Route::post('/assign-ar', 'EncounterController@updateAR');
+Route::post('/assign-lm', 'EncounterController@updateLM');
 
 Route::get('/tech-home', 'HomeController@techHome');
 Route::get('/truvision/{encounter}', 'EncounterController@truvision')->name('truvision');
@@ -32,7 +34,6 @@ Route::get("/admin-panel", "HomeController@admin");
 Route::post('/add-location', 'StoreLocationController@store');
 Route::post('/add-user', 'StoreLocationController@addUser');
 Route::post('/add-instrument', 'InstrumentController@store');
-Route::get('/delete-user/{user}', 'StoreLocationController@deleteUser');
 Route::post('/encounter-complete', 'EncounterController@complete');
 
 

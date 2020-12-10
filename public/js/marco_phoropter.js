@@ -6,6 +6,8 @@ var staticFinal = [];
 var finalData = [];
 var finalPush = 0;
 
+
+
 var specData = [
     "RS" + numeral(refInfo.la01).format("+00.00"),
     "LS" + numeral(refInfo.la05).format("+00.00"),
@@ -274,7 +276,7 @@ $(document).keydown(function(event) {
             );
             curPow -= axisChangeAmount;
 
-            if (curPow < 1) curPow = 180;
+            if (curPow < 0) curPow = 179;
             $(".ref-data-active ." + curEye + "Axis").html(
                 numeral(curPow).format("000")
             );
@@ -311,7 +313,9 @@ $(document).keydown(function(event) {
                 $(".ref-data-active ." + curEye + "Axis").html()
             );
             curPow += axisChangeAmount;
-            if (curPow > 180) curPow = 001;
+            if (curPow == 180) curPow = 000;
+            if(curPow > 180) curPow = 001
+            // if(curPow == 180) curPow =
             $(".ref-data-active ." + curEye + "Axis").html(
                 numeral(curPow).format("000")
             );
@@ -432,7 +436,7 @@ $(document).keydown(function(event) {
                             "rotate(-" +
                             (parseFloat(
                                 $(".ref-data-active ." + curEye + "Axis").html()
-                            ) +
+                            ) -
                                 45) +
                             "deg)",
                         visibility: "visible"
@@ -443,22 +447,24 @@ $(document).keydown(function(event) {
                     sendData(["KAR", jccCurStat, "XM2"]);
                     // $("#jccOD").css("visibility", "visible");
                 } else if (curEye == "os") {
-                    $("#jccOS").css({
-                        transform:
-                            "rotate(" +
-                            parseFloat(
-                                $(".ref-data-active ." + curEye + "Axis").html()
-                            ) +
-                            "deg)",
-                        visibility: "visible"
-                    });
-                    $("#jccOSText").html(
-                        jccStatus == 1 ? "Choice 1 (+)" : "Choice 2 (-)"
-                    );
+                  $("#jccOS").css({
+                      transform:
+                          "rotate(-" +
+                          (parseFloat(
+                              $(".ref-data-active ." + curEye + "Axis").html()
+                          ) -
+                              45) +
+                          "deg)",
+                      visibility: "visible"
+                  });
+                  $("#jccOSText").html(
+                      jccStatus == 1 ? "Choice 1 (+)" : "Choice 2 (-)"
+                  );
                     sendData(["KAL", jccCurStat, "XM2"]);
                     // $("#jccOS").css("visibility", "visible");
                 }
             } else if (jccMode == 2) {
+                rotateAmount = jccStatus == 1? -45: 45
                 $("#axisRow").removeClass("cross-cylinder-select");
                 $("#cylRow").addClass("cross-cylinder-select");
                 if (curEye == "od") {
@@ -467,8 +473,7 @@ $(document).keydown(function(event) {
                             "rotate(" +
                             (getRotationAngle(
                                 document.getElementById("jccOD")
-                            ) +
-                                45) +
+                            ) + rotateAmount) +
                             "deg)"
                     });
                     $("#jccOD").css("visibility", "visible");
@@ -477,19 +482,18 @@ $(document).keydown(function(event) {
                     );
                     sendData(["KCR", jccCurStat]);
                 } else if (curEye == "os") {
-                    $("#jccOS").css({
-                        transform:
-                            "rotate(" +
-                            (getRotationAngle(
-                                document.getElementById("jccOS")
-                            ) -
-                                45) +
-                            "deg)"
-                    });
-                    $("#jccOS").css("visibility", "visible");
-                    $("#jccOSText").html(
-                        jccStatus == 1 ? "Choice 1 (+)" : "Choice 2 (-)"
-                    );
+                  $("#jccOS").css({
+                      transform:
+                          "rotate(" +
+                          (getRotationAngle(
+                              document.getElementById("jccOS")
+                          ) + rotateAmount) +
+                          "deg)"
+                  });
+                  $("#jccOS").css("visibility", "visible");
+                  $("#jccOSText").html(
+                      jccStatus == 1 ? "Choice 1 (+)" : "Choice 2 (-)"
+                  );
                     sendData(["KCL", jccCurStat]);
                 }
             } else {
@@ -599,14 +603,15 @@ $(document).keyup(function(event) {
 });
 
 $(document).ready(function() {
-    $(".odButtons").addClass("phorEyeActive");
+    //for some reason, the phoropter does not like it when the line below assigning the class is active. tech will have to manually select OD/OS first.
+    // $(".odButtons").addClass("phorEyeActive");
     buildStaticArrays();
     createSubjectiveDataArray();
     sphEqOD = parseFloat($(phorButtons[6]).html());
     sphEqOS = parseFloat($(phorButtons[8]).html());
     axisOD = parseFloat($(phorButtons[9]).html());
     axisOS = parseFloat($(phorButtons[11]).html());
-    sendData(["RX00", "LX01"]);
+    setTimeout(sendData(["RX00", "LX01", "PD"+refInfo.ar01]), 5000);
 });
 
 $(".ref-data").click(function(d) {
@@ -674,6 +679,7 @@ $("#plano_button").click(function() {
 
 function createSubjectiveDataArray() {
     subjectiveData = [];
+    //cycle through all button values and create an array based on button html
     $(".phorButton").each(function(e) {
         if (e > 2 && e != 4 && e != 7 && e != 10 && e != 13) {
             if (e != 9 && e != 11) {
@@ -684,14 +690,12 @@ function createSubjectiveDataArray() {
             } else {
                 subjectiveData.push(
                     $(this).data("prefix") +
-                        numeral($(this).html()).format("000")
+                        numeral($(this).html() == "180"? "000":$(this).html()).format("000")
                 );
             }
         }
     });
-    // subjectiveData.unshift(curEye);
-    // subjectiveData[subjectiveData.length] = dist;
-    // subjectiveData.push("XC0");
+
     sendData(subjectiveData);
 }
 

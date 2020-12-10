@@ -30,9 +30,9 @@ class HomeController extends Controller
     public function index()
     {
         // $ins = Instrument::where('id', Auth::user()->store_location_id->instrument)->get();
-        $ins = Auth::user()->storeLocation->instrument;
+        // $ins = Auth::user()->storeLocation->instrument;
 
-        return view('home', compact('ins'));
+        return view('home');
     }
 
     public function techHome(){
@@ -46,6 +46,12 @@ class HomeController extends Controller
       $techs = User::all();
       $instruments = Instrument::all();
       return view('admin-home', compact('stores', 'techs', 'instruments'));
+    }
+
+    public function getInstrument(Request $request){
+      $store = StoreLocation::where('store_number', $request->store)->first();
+      $ins = $store->instrument;
+      return $ins;
     }
 
 }

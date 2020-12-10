@@ -24,7 +24,8 @@
           {{-- @foreach($ins as $in)
             <div class="btn btn-danger" onclick="serialConnect({{$in->id}}, this)" id="ins-button">{{$in->instrument->name}}</div>
           @endforeach --}}
-            <div class="btn btn-danger" onclick="serialConnect({{$ins->id}}, this)" id="ins-button">{{$ins->meta_name}}</div>
+          <div id="instrumentButton"></div>
+
           <br /><br />
             <div class="card">
                 <div class="card-header">{{ __('Dashboard') }}</div>
@@ -122,6 +123,17 @@
         chart = window.open("/patient-chart","PatientChart", "width=300, height=300, toolbar = 0, status=0,");
     })
 
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: '/get-store-instrument',
+      type: 'get',
+      data:{
+        store: localStorage.getItem('location')
+      },
+      success: data => $("#instrumentButton").html(`<div class="btn btn-danger" onclick="serialConnect(${data.id}, this)" id="ins-button">${data.meta_name}</div>`)
+    })
 
 
 

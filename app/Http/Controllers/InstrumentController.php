@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Instrument;
 use Illuminate\Http\Request;
 use App\Events\PhoropterSequence;
+use App\StoreLocation;
 
 class InstrumentController extends Controller
 {
@@ -19,7 +20,9 @@ class InstrumentController extends Controller
     }
 
     public function marcoPhoropter(Request $request){
-      event(new PhoropterSequence($request->refractive_info, $request->ri_type, $request->location));
+      $store = StoreLocation::where('id', $request->location)->first();
+      $store_number = $store->store_number;
+      event(new PhoropterSequence($request->refractive_info, $request->ri_type, $store_number));
     }
     public function marcoPhoropterJcc(Request $request){
       event(new JccSequence($request->jcc, $request->location));
