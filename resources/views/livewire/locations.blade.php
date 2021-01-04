@@ -7,6 +7,8 @@
       <th scope="col">Address</th>
       <th scope="col">Calibration</th>
       <th>Phoropter</th>
+      <th>Lensometer</th>
+      <th>AutoRef</th>
       <th></th>
     </tr>
   </thead>
@@ -17,7 +19,9 @@
         <td>{{$e->store_number}}</td>
         <td>{{$e->street}}<br />{{$e->city.', '.$e->state}}</td>
         <td>{{$e->screen_calibration}}</td>
-        <td>{{$e->instrument->name}}</td>
+        <td>{{$e->phoropter->name??"None"}}</td>
+        <td>{{$e->lensometer->name??"None"}}</td>
+        <td>{{$e->refractor->name??"None"}}</td>
         <td><button wire:click="deleteLocation({{$e->id}})" class="btn-sm btn-danger">Delete</button><button wire:click="editLocation({{$e->id}})" class="btn-sm btn-info">Edit</button></td>
       </tr>
     @endforeach
@@ -59,10 +63,26 @@
             <input wire:model="location.state" type="text" class="form-control" id="state" >
           </div>
           <div class="form-group">
-            <label for="state">Phoropter Model</label>
-            <select  name="phor" id="phor" wire:model="location.instrument_id">
-              @foreach($instruments as $in)
-                <option value="{{$in->id}}" @if($location != null && $location->instrument_id == $in->id) selected @endif>{{$in->name}}</option>
+            <label for="phor">Phoropter Model</label>
+            <select  name="phor" id="phor" wire:model="location.phoropter_id">
+              @foreach($phoropters as $in)
+                <option value="{{$in->id}}" @if($location != null && $location->phoropter_id == $in->id) selected @endif>{{$in->name}}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="al">Lensometer Model</label>
+            <select  name="al" id="al" wire:model="location.lensometer_id">
+              @foreach($lensometers as $in)
+                <option value="{{$in->id}}" @if($location != null && $location->lensometer_id == $in->id) selected @endif>{{$in->name}}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="refs">AutoRef Model</label>
+            <select  name="refs" id="refs" wire:model="location.refractor_id">
+              @foreach($autorefs as $in)
+                <option value="{{$in->id}}" @if($location != null && $location->refractor_id == $in->id) selected @endif>{{$in->name}}</option>
               @endforeach
             </select>
           </div>

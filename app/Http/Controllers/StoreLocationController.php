@@ -6,6 +6,7 @@ use App\StoreLocation;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Hash;
+use Auth;
 
 class StoreLocationController extends Controller
 {
@@ -106,4 +107,25 @@ class StoreLocationController extends Controller
     {
         //
     }
+
+
+    public function localFunctions(Request $request)
+    {
+      $store = StoreLocation::where('api_token', $request->api_token)->first();
+      $phor = $store->phoropter->name ?? null;
+      $lens = $store->lensometer->local_function ?? null;
+      $ref = $store->refractor->name ?? null;
+      return response()->json(["phor" => $phor, "lens" => $lens, "ref"=>$ref]);
+    }
+
+
+
+
+
+
+
+
+
+
+
 }

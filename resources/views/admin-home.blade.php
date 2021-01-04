@@ -56,9 +56,25 @@
             <input type="text" class="form-control" id="state" >
           </div>
           <div class="form-group">
-            <label for="state">Phoropter Model</label>
+            <label for="phor">Phoropter Model</label>
             <select  name="phor" id="phor">
-              @foreach($instruments as $in)
+              @foreach($phoropters as $in)
+                <option value="{{$in->id}}">{{$in->name}}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="al">Lensometer Model</label>
+            <select  name="al" id="al">
+              @foreach($lensometers as $in)
+                <option value="{{$in->id}}">{{$in->name}}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="refs">AutoRef Model</label>
+            <select  name="refs" id="refs">
+              @foreach($autorefs as $in)
                 <option value="{{$in->id}}">{{$in->name}}</option>
               @endforeach
             </select>
@@ -137,12 +153,20 @@
       <div class="modal-body">
         <form>
           <div class="form-group">
-            <label for="userName">Model Name</label>
+            <label for="modelName">Model Name</label>
             <input type="text" class="form-control" id="modelName" >
           </div>
           <div class="form-group">
-            <label for="userEmail">Serial Name</label>
+            <label for="meta_name">Serial Name</label>
             <input type="email" class="form-control" id="meta_name" >
+          </div>
+          <div class="form-group">
+            <label for="type">Type</label>
+            <select id="modelType">
+              <option value="phor">Phoropter</option>
+              <option value="al">Lensometer</option>
+              <option value="ar">AutoRef</option>
+            </select>
           </div>
         </form>
       </div>

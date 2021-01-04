@@ -48,7 +48,7 @@ class EncounterController extends Controller
     public function store(Request $request)
     {
         $en = new Encounter();
-        $store = StoreLocation::where('store_number', $request->location)->first();
+        $store = StoreLocation::where('api_token', $request->api_token)->first();
         $en->store_location_id = $store->id;
         $en->pt_id = $request->pt_id;
         $en->pt_name = $request->pt_name;

@@ -46,6 +46,11 @@ return [
             'provider' => 'locations',
             'hash' => false,
         ],
+        'user_api' => [
+            'driver' => 'token',
+            'provider' => 'techs',
+            'hash' => false,
+        ],
     ],
 
     /*
@@ -74,6 +79,10 @@ return [
         'locations' => [
             'driver' => 'database',
             'table' => 'store_locations',
+        ],
+        'techs' => [
+            'driver' => 'database',
+            'table' => 'users',
         ],
     ],
 

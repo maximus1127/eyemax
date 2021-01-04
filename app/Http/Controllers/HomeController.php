@@ -45,12 +45,15 @@ class HomeController extends Controller
       $stores = StoreLocation::all();
       $techs = User::all();
       $instruments = Instrument::all();
-      return view('admin-home', compact('stores', 'techs', 'instruments'));
+      $phoropters = Instrument::where('type', 'phor')->get();
+      $lensometers = Instrument::where('type', 'al')->get();
+      $autorefs = Instrument::where('type', 'ar')->get();
+      return view('admin-home', compact('stores', 'techs', 'instruments', 'phoropters', 'lensometers', 'autorefs'));
     }
 
     public function getInstrument(Request $request){
       $store = StoreLocation::where('store_number', $request->store)->first();
-      $ins = $store->instrument;
+      $ins = $store->phoropter;
       return $ins;
     }
 

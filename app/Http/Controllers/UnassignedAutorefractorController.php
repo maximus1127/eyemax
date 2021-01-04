@@ -38,7 +38,7 @@ class UnassignedAutorefractorController extends Controller
     public function receiveMarco(Request $request) //applies AR and LM and KM
     {
 
-        $store = StoreLocation::where('store_number', $request->location)->first();
+        $store = StoreLocation::where('api_token', $request->api_token)->first();
         $xml = XmlParser::load($request->file('marco'));
         $ar = $xml->parse([
             'ar02' => ['uses' => 'DataSet.RM_Data_OD.Sphere_OD'],
@@ -80,23 +80,24 @@ class UnassignedAutorefractorController extends Controller
           if ($ul->save()) {
               return response("200");
           }
+          // str_pad(str_replace(" ","", $request->ar['ar04']), 3, "0", STR_PAD_LEFT);
         } else {
         $ua = new UnassignedAutorefractor();
         $ua->ar01 = $ar['ar01'];
         $ua->ar02 = str_replace(" ", "", $ar['ar02']) == "" ? null : $ar['ar02'];
         $ua->ar03 = str_replace(" ", "", $ar['ar03']) == "" ? null : $ar['ar03'];
-        $ua->ar04 = str_replace(" ", "", $ar['ar04']) == "" ? null : $ar['ar04'];
+        $ua->ar04 = str_replace(" ", "", $ar['ar04']) == "" ? null : str_pad($ar['ar04'], 3, "0", STR_PAD_LEFT);
         $ua->ar05 = str_replace(" ", "", $ar['ar05']) == "" ? null : $ar['ar05'];
         $ua->ar06 = str_replace(" ", "", $ar['ar06']) == "" ? null : $ar['ar06'];
         $ua->ar08 = $ar['ar08'];
-        $ua->ar09 = $ar['ar09'];
+        $ua->ar09 = str_replace(" ", "", $ar['ar09']) == "" ? null : str_pad($ar['ar09'], 3, "0", STR_PAD_LEFT);
         $ua->ar10 = $ar['ar10'];
-        $ua->ar07 = str_replace(" ", "", $ar['ar07']) == "" ? null : $ar['ar07'];
-        $ua->ar11 = $ar['ar11'];
+        $ua->ar07 = str_replace(" ", "", $ar['ar07']) == "" ? null : str_pad($ar['ar07'], 3, "0", STR_PAD_LEFT);
+        $ua->ar11 = str_replace(" ", "", $ar['ar11']) == "" ? null : str_pad($ar['ar11'], 3, "0", STR_PAD_LEFT);
         $ua->ar12 = $ar['ar12'];
-        $ua->ar13 = $ar['ar13'];
+        $ua->ar13 = str_replace(" ", "", $ar['ar13']) == "" ? null : str_pad($ar['ar15'], 3, "0", STR_PAD_LEFT);
         $ua->ar14 = $ar['ar14'];
-        $ua->ar15 = $ar['ar15'];
+        $ua->ar15 = str_replace(" ", "", $ar['ar15']) == "" ? null : str_pad($ar['ar15'], 3, "0", STR_PAD_LEFT);
         $ua->la01 = $ar['la01'];
         $ua->la02 = $ar['la02'];
         $ua->la03 = $ar['la03'];

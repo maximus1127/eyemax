@@ -16,13 +16,22 @@ class Locations extends Component
       'location.street' => 'nullable',
       'location.city' => 'nullable',
       'location.state' => 'nullable',
-      'location.instrument_id' => 'required',
+      'location.phoropter_id' => 'required',
+      'location.lensometer_id' => 'required',
+      'location.refractor_id' => 'required',
       'location.api_token' => 'min:3'
     ];
 
+    public $phoropters;
+    public $lensometers;
+    public $autorefs;
+
     public function render()
     {
-        return view('livewire.locations', ['stores' => StoreLocation::all(), 'instruments' => Instrument::all()]);
+        $this->phoropters = Instrument::where('type', 'phor')->get();
+        $this->lensometers = Instrument::where('type', 'al')->get();
+        $this->autorefs = Instrument::where('type', 'ar')->get();
+        return view('livewire.locations', ['stores' => StoreLocation::all()]);
     }
 
     public function deleteLocation($id){
